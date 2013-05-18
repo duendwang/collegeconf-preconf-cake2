@@ -47,6 +47,9 @@ class RatesController extends AppController {
 				$this->Session->setFlash(__('The rate could not be saved. Please, try again.'));
 			}
 		}
+		$conferenceLocations = $this->Rate->ConferenceLocation->find('list');
+		$rateTypes = $this->Rate->RateType->find('list');
+		$this->set(compact('conferenceLocations', 'rateTypes'));
 	}
 
 /**
@@ -71,6 +74,9 @@ class RatesController extends AppController {
 			$options = array('conditions' => array('Rate.' . $this->Rate->primaryKey => $id));
 			$this->request->data = $this->Rate->find('first', $options);
 		}
+		$conferenceLocations = $this->Rate->ConferenceLocation->find('list');
+		$rateTypes = $this->Rate->RateType->find('list');
+		$this->set(compact('conferenceLocations', 'rateTypes'));
 	}
 
 /**
@@ -93,7 +99,6 @@ class RatesController extends AppController {
 		$this->Session->setFlash(__('Rate was not deleted'));
 		$this->redirect(array('action' => 'index'));
 	}
-
 
 /**
  * admin_index method
@@ -135,6 +140,9 @@ class RatesController extends AppController {
 				$this->Session->setFlash(__('The rate could not be saved. Please, try again.'));
 			}
 		}
+		$conferenceLocations = $this->Rate->ConferenceLocation->find('list');
+		$rateTypes = $this->Rate->RateType->find('list');
+		$this->set(compact('conferenceLocations', 'rateTypes'));
 	}
 
 /**
@@ -159,6 +167,9 @@ class RatesController extends AppController {
 			$options = array('conditions' => array('Rate.' . $this->Rate->primaryKey => $id));
 			$this->request->data = $this->Rate->find('first', $options);
 		}
+		$conferenceLocations = $this->Rate->ConferenceLocation->find('list');
+		$rateTypes = $this->Rate->RateType->find('list');
+		$this->set(compact('conferenceLocations', 'rateTypes'));
 	}
 
 /**

@@ -3,6 +3,8 @@ App::uses('AppModel', 'Model');
 /**
  * Rate Model
  *
+ * @property ConferenceLocation $ConferenceLocation
+ * @property RateType $RateType
  */
 class Rate extends AppModel {
 
@@ -11,7 +13,7 @@ class Rate extends AppModel {
  *
  * @var string
  */
-	public $displayField = 'name';
+	public $displayField = 'rate_type_id';
 
 /**
  * Validation rules
@@ -19,9 +21,35 @@ class Rate extends AppModel {
  * @var array
  */
 	public $validate = array(
-		'name' => array(
+		'conference_location_id' => array(
 			'notempty' => array(
 				'rule' => array('notempty'),
+				//'message' => 'Your custom message here',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+			'numeric' => array(
+				'rule' => array('numeric'),
+				//'message' => 'Your custom message here',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		),
+		'rate_type_id' => array(
+			'notempty' => array(
+				'rule' => array('notempty'),
+				//'message' => 'Your custom message here',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+			'numeric' => array(
+				'rule' => array('numeric'),
 				//'message' => 'Your custom message here',
 				//'allowEmpty' => false,
 				//'required' => false,
@@ -30,16 +58,16 @@ class Rate extends AppModel {
 			),
 		),
 		'cost' => array(
-			'notempty' => array(
-				'rule' => array('notempty'),
+			'money' => array(
+				'rule' => array('money'),
 				//'message' => 'Your custom message here',
 				//'allowEmpty' => false,
 				//'required' => false,
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
-			'money' => array(
-				'rule' => array('money'),
+			'notempty' => array(
+				'rule' => array('notempty'),
 				//'message' => 'Your custom message here',
 				//'allowEmpty' => false,
 				//'required' => false,
@@ -83,5 +111,29 @@ class Rate extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
+	);
+
+	//The Associations below have been created with all possible keys, those that are not needed can be removed
+
+/**
+ * belongsTo associations
+ *
+ * @var array
+ */
+	public $belongsTo = array(
+		'ConferenceLocation' => array(
+			'className' => 'ConferenceLocation',
+			'foreignKey' => 'conference_location_id',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
+		),
+		'RateType' => array(
+			'className' => 'RateType',
+			'foreignKey' => 'rate_type_id',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
+		)
 	);
 }

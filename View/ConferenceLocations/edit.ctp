@@ -19,5 +19,7 @@
 		<li><?php echo $this->Html->link(__('New Conference'), array('controller' => 'conferences', 'action' => 'add')); ?> </li>
 		<li><?php echo $this->Html->link(__('List Lodging Facilities'), array('controller' => 'lodging_facilities', 'action' => 'index')); ?> </li>
 		<li><?php echo $this->Html->link(__('New Lodging Facility'), array('controller' => 'lodging_facilities', 'action' => 'add')); ?> </li>
+		<li><?php echo $this->Html->link(__('List Rates'), array('controller' => 'rates', 'action' => 'index')); ?> </li>
+		<li><?php echo $this->Html->link(__('New Rate'), array('controller' => 'rates', 'action' => 'add')); ?> </li>
 	</ul>
 </div>

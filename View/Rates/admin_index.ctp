@@ -3,7 +3,8 @@
 	<table cellpadding="0" cellspacing="0">
 	<tr>
 			<th><?php echo $this->Paginator->sort('id'); ?></th>
-			<th><?php echo $this->Paginator->sort('name'); ?></th>
+			<th><?php echo $this->Paginator->sort('conference_location_id'); ?></th>
+			<th><?php echo $this->Paginator->sort('rate_type_id'); ?></th>
 			<th><?php echo $this->Paginator->sort('cost'); ?></th>
 			<th><?php echo $this->Paginator->sort('latefee_applies'); ?></th>
 			<th><?php echo $this->Paginator->sort('active'); ?></th>
@@ -13,7 +14,12 @@
 	<?php foreach ($rates as $rate): ?>
 	<tr>
 		<td><?php echo h($rate['Rate']['id']); ?>&nbsp;</td>
-		<td><?php echo h($rate['Rate']['name']); ?>&nbsp;</td>
+		<td>
+			<?php echo $this->Html->link($rate['ConferenceLocation']['name'], array('controller' => 'conference_locations', 'action' => 'view', $rate['ConferenceLocation']['id'])); ?>
+		</td>
+		<td>
+			<?php echo $this->Html->link($rate['RateType']['name'], array('controller' => 'rate_types', 'action' => 'view', $rate['RateType']['id'])); ?>
+		</td>
 		<td><?php echo h($rate['Rate']['cost']); ?>&nbsp;</td>
 		<td><?php echo h($rate['Rate']['latefee_applies']); ?>&nbsp;</td>
 		<td><?php echo h($rate['Rate']['active']); ?>&nbsp;</td>
@@ -44,5 +50,9 @@
 	<h3><?php echo __('Actions'); ?></h3>
 	<ul>
 		<li><?php echo $this->Html->link(__('New Rate'), array('action' => 'add')); ?></li>
+		<li><?php echo $this->Html->link(__('List Conference Locations'), array('controller' => 'conference_locations', 'action' => 'index')); ?> </li>
+		<li><?php echo $this->Html->link(__('New Conference Location'), array('controller' => 'conference_locations', 'action' => 'add')); ?> </li>
+		<li><?php echo $this->Html->link(__('List Rate Types'), array('controller' => 'rate_types', 'action' => 'index')); ?> </li>
+		<li><?php echo $this->Html->link(__('New Rate Type'), array('controller' => 'rate_types', 'action' => 'add')); ?> </li>
 	</ul>
 </div>

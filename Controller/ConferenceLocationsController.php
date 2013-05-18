@@ -94,7 +94,6 @@ class ConferenceLocationsController extends AppController {
 		$this->redirect(array('action' => 'index'));
 	}
 
-
 /**
  * admin_index method
  *
