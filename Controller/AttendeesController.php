@@ -44,7 +44,9 @@ class AttendeesController extends AppController {
 				$this->Session->setFlash(__('The attendee has been saved'));
 				$this->redirect(array('action' => 'index'));
 			} else {
-				$this->Session->setFlash(__('The attendee could not be saved. Please, try again.'));
+				debug($this->Attendee->validationErrors);
+                                exit;
+                                $this->Session->setFlash(__('The attendee could not be saved. Please, try again.'));
 			}
 		}
 		$conferences = $this->Attendee->Conference->find('list');
