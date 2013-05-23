@@ -9,12 +9,23 @@ App::uses('AppModel', 'Model');
  */
 class Lodging extends AppModel {
 
+//TODO Set up virtual field according to location of conference, and displayField accordinngly
+
+/**
+ * Virtual Fields
+ */
+
+        /*public $virtualFields = array(
+            'BB_name' => "CONCAT(Lodging.name,' ',Lodging.room)",            
+        );*/
+
 /**
  * Display field
  *
  * @var string
  */
-	public $displayField = 'name';
+	
+        public $displayField = 'name';
 
 /**
  * Validation rules
@@ -23,19 +34,11 @@ class Lodging extends AppModel {
  */
 	public $validate = array(
 		'conference_id' => array(
-			'notempty' => array(
-				'rule' => array('notempty'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
-			),
 			'numeric' => array(
 				'rule' => array('numeric'),
 				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
+				'allowEmpty' => false,
+				'required' => true,
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
@@ -44,8 +47,8 @@ class Lodging extends AppModel {
 			'numeric' => array(
 				'rule' => array('numeric'),
 				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
+				'allowEmpty' => true,
+				'required' => false,
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
@@ -54,8 +57,8 @@ class Lodging extends AppModel {
 			'notempty' => array(
 				'rule' => array('notempty'),
 				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
+				'allowEmpty' => false,
+				'required' => true,
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
@@ -64,8 +67,8 @@ class Lodging extends AppModel {
 			'phone' => array(
 				'rule' => array('phone'),
 				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
+				'allowEmpty' => true,
+				'required' => false,
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
@@ -74,8 +77,8 @@ class Lodging extends AppModel {
 			'phone' => array(
 				'rule' => array('phone'),
 				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
+				'allowEmpty' => true,
+				'required' => false,
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),

@@ -8,6 +8,8 @@ App::uses('AppModel', 'Model');
  */
 class Campus extends AppModel {
 
+//TODO displayfield display name with code if there is one.
+
 /**
  * Display field
  *
@@ -25,8 +27,8 @@ class Campus extends AppModel {
 			'notempty' => array(
 				'rule' => array('notempty'),
 				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
+				'allowEmpty' => false,
+				'required' => true,
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
@@ -36,7 +38,7 @@ class Campus extends AppModel {
 				'rule' => array('alphanumeric'),
 				//'message' => 'Your custom message here',
 				'allowEmpty' => true,
-				//'required' => false,
+				'required' => false,
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
