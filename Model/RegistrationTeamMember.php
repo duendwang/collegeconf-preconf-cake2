@@ -1,12 +1,12 @@
 <?php
 App::uses('AppModel', 'Model');
 /**
- * RegistrationTeamAssignment Model
+ * RegistrationTeamMember Model
  *
  * @property User $User
  * @property RegistrationTeam $RegistrationTeam
  */
-class RegistrationTeamAssignment extends AppModel {
+class RegistrationTeamMember extends AppModel {
 
 /**
  * Validation rules

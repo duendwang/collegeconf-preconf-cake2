@@ -3,7 +3,7 @@ App::uses('AppModel', 'Model');
 /**
  * User Model
  *
- * @property RegistrationTeamAssignment $RegistrationTeamAssignment
+ * @property RegistrationTeamMember $RegistrationTeamMember
  * @property UserType $UserType
  * @property Locality $Locality
  * @property Status $Status
@@ -58,7 +58,7 @@ class User extends AppModel {
 		'password' => array(
 			'notempty' => array(
 				'rule' => array('notempty'),
-				//'message' => 'Cannot be blank',
+				'message' => 'Blank passwords not allowed.',
 				'allowEmpty' => false,
 				'required' => true,
 				//'last' => false, // Stop validation after this rule
@@ -67,7 +67,7 @@ class User extends AppModel {
 		),
 		'cell_phone' => array(
 			'phone' => array(
-				'rule' => array('phone'),
+				'rule' => array('phone',null,'us'),
 				//'message' => 'Your custom message here',
 				'allowEmpty' => true,
 				'required' => false,
@@ -135,8 +135,8 @@ class User extends AppModel {
  * @var array
  */
 	public $hasOne = array(
-		'RegistrationTeamAssignment' => array(
-			'className' => 'RegistrationTeamAssignment',
+		'RegistrationTeamMember' => array(
+			'className' => 'RegistrationTeamMember',
 			'foreignKey' => 'user_id',
 			'conditions' => '',
 			'fields' => '',
@@ -357,5 +357,17 @@ class User extends AppModel {
 		),
 		
 	);
+
+/**
+ * beforeSave method
+ *
+ * @return null
+ */
+	public function beforeSave() {
+            if (!empty($this->data[$this->alias]['new_password'])) {
+                $this->data[$this->alias]['password'] = AuthComponent::password($this->data[$this->alias]['new_password']);
+            }
+            return true;
+	}
 
 }

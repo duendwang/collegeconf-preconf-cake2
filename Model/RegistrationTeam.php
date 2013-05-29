@@ -3,7 +3,7 @@ App::uses('AppModel', 'Model');
 /**
  * RegistrationTeam Model
  *
- * @property RegistrationTeamAssignment $RegistrationTeamAssignment
+ * @property RegistrationTeamMember $RegistrationTeamMember
  */
 class RegistrationTeam extends AppModel {
 
@@ -40,8 +40,8 @@ class RegistrationTeam extends AppModel {
  * @var array
  */
 	public $hasMany = array(
-		'RegistrationTeamAssignment' => array(
-			'className' => 'RegistrationTeamAssignment',
+		'RegistrationTeamMember' => array(
+			'className' => 'RegistrationTeamMember',
 			'foreignKey' => 'registration_team_id',
 			'dependent' => false,
 			'conditions' => '',

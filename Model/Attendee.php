@@ -52,9 +52,9 @@ class Attendee extends AppModel {
 			),
 		),
 		'first_name' => array(
-			'notempty' => array(
-				'rule' => array('notempty'),
-				'message' => 'Required to save',
+			'alpha' => array(
+				'rule' => '/^[a-z\s]+$/i', //TODO
+				'message' => 'Required to save. Letters only.',
 				'allowEmpty' => false,
 				'required' => true,
 				//'last' => false, // Stop validation after this rule
@@ -62,9 +62,9 @@ class Attendee extends AppModel {
 			),
 		),
 		'last_name' => array(
-			'notempty' => array(
-				'rule' => array('notempty'),
-				'message' => 'Required to save',
+			'alpha' => array(
+				'rule' => '/^[a-z\s]+$/i',
+				'message' => 'Required to save. Letters only.',
 				'allowEmpty' => false,
 				'required' => true,
 				//'last' => false, // Stop validation after this rule
@@ -179,8 +179,8 @@ class Attendee extends AppModel {
 		),
 		'cell_phone' => array(
 			'phone' => array(
-				'rule' => array('phone'),
-				//'message' => 'Your custom message here',
+				'rule' => array('phone',null,'us'),
+				'message' => 'XXX-XXX-XXXX',
 				'allowEmpty' => true,
 				'required' => false,
 				//'last' => false, // Stop validation after this rule
