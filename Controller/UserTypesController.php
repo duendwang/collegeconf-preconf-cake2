@@ -47,7 +47,12 @@ class UserTypesController extends AppController {
 				$this->Session->setFlash(__('The user type could not be saved. Please, try again.'));
 			}
 		}
-		$users = $this->UserType->User->find('list');
+                $users = $this->UserType->User->find('list',array('conditions' => array('User.first_name !=' => ""),'fields' => array('User.name'),'order' => 'User.last_name')) +
+                        $this->UserType->User->find('list',array('conditions' => array('User.first_name' => ""),'fields' => array('Locality.city'),'order' => 'Locality.city','recursive' => 0));
+		//debug($this->UserType->User->find('list',array('conditions' => array('User.first_name !=' => ""),'fields' => array('User.name'),'order' => 'User.last_name')));
+                //debug($this->UserType->User->find('list',array('conditions' => array('User.first_name' => ""),'fields' => array('Locality.city'),'order' => 'Locality.city','recursive' => 1)));
+                //debug($users);
+                //exit;
 		$accountTypes = $this->UserType->AccountType->find('list');
 		$this->set(compact('users', 'accountTypes'));
 	}

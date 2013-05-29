@@ -8,12 +8,90 @@ App::uses('AppController', 'Controller');
 class UsersController extends AppController {
 
 /**
+ * beforeFilter method
+ *
+ * @return void
+ */
+
+        public function beforeFilter() {
+            parent::beforeFilter();
+            $this->Auth->allow('login','logout');
+        }
+ 
+ /**
+ * login method
+ *
+ * @return void
+ */
+ 
+	public function login() {
+            //$this->layout = 'login';
+            if ($this->request->is('post')) {
+		if ($this->Auth->login()) {
+                    //debug($this->Auth->redirect());
+                    //exit;
+                    $this->redirect($this->Auth->redirect());
+                } else {
+                    $this->Session->setFlash(__('Invalid username or password, try again'),'failure');
+                    //$this->Session->setFlash(__('wrong'));
+                }
+            }
+	}
+ 
+ /**
+ * logout method
+ *
+ * @return void
+ */
+ 
+	public function logout() {
+                $this->Session->delete('User');
+                $this->Session->delete('Attendee');
+                //$this->Session->destroy();
+                $this->Session->setFlash(__('You have been successfully logged out. For security reasons, please close your browser.'),'success');
+		$this->redirect($this->Auth->logout());
+	}
+
+/**
  * index method
  *
  * @return void
  */
 	public function index() {
+                $this->loadModel('UserType');
 		$this->User->recursive = 0;
+                if($this->UserType->find('list',array('conditions' => array('UserType.user_id =' => $this->Auth->user('id'),'UserType.account_type_id' => array('1','2','3'))))) {
+                    $this->paginate = array(
+                        'conditions' => array('UserType.account_type_id' => '1',"UserType.user_id NOT IN ('1','19')",'User.active' => 1),
+                        'order' => 'User.last_name',
+                        'limit' => 50,
+                        'recursive' => 2,
+                        'joins' => array(
+                            array(
+                                'table' => 'user_types',
+                                'alias' => 'UserType',
+                                'type' => 'inner',
+                                'conditions' => array('UserType.user_id=User.id')
+                        ))
+                    );
+                    //$this->set('overseer_users',$this->UserType->find('all',array('conditions' => array('UserType.account_type_id' => '1',"UserType.user_id NOT IN ('1','19')"),'recursive' => 2,'order' => 'User.last_name')));
+                    $this->set('overseer_users',$this->paginate());
+                    $this->paginate = array(
+                        'conditions' => array('UserType.account_type_id' => array('2','3'), 'UserType.user_id !=' => 1,'User.active' => 1),
+                        'order' => 'User.last_name',
+                        'limit' => 50,
+                        'recursive' => 2,
+                        'joins' => array(
+                            array(
+                                'table' => 'user_types',
+                                'alias' => 'UserType',
+                                'type' => 'inner',
+                                'conditions' => array('UserType.user_id=User.id')
+                        ))
+                    );
+                    $this->set('registration_users',$this->paginate());
+                    //$this->set('registration_users',$this->UserType->find('all',array('conditions' => array('UserType.account_type_id' => array('2','3'), 'UserType.user_id !=' => 1),'recursive' => 2,'order' => 'User.last_name')));
+                }
 		$this->set('users', $this->paginate());
 	}
 
@@ -71,12 +149,17 @@ class UsersController extends AppController {
 			} else {
 				$this->Session->setFlash(__('The user could not be saved. Please, try again.'));
 			}
+		} elseif (($this->UserType->find('list',array('conditions' => array('UserType.user_id =' => $this->Auth->user('id'),'UserType.account_type_id =' => '4'))) && $id == $this->Auth->user('id')) | $this->UserType->find('list',array('conditions' => array('UserType.user_id =' => $this->Auth->user('id'),'UserType.account_type_id <' => '4')))) { //LRC account types can only edit their own account, all other account types without restriction
+                    $this->request->data = $this->User->read(null, $id);
 		} else {
-			$options = array('conditions' => array('User.' . $this->User->primaryKey => $id));
-			$this->request->data = $this->User->find('first', $options);
+                    $this->Session->setFlash(__('You are not authorized to view this page'),'failure');
+                    $this->redirect(array('controller' => 'pages', 'action' => 'home'));
+                    //$options = array('conditions' => array('User.' . $this->User->primaryKey => $id));
+                    //$this->request->data = $this->User->find('first', $options);
 		}
+                $this->set('Lrcs', $this->Lrc->find('all', array('conditions' => array('Lrc.locality_id =' => $this->Auth->user('locality_id')))));
 		$localities = $this->User->Locality->find('list');
-		$statuses = $this->User->Status->find('list');
+		$statuses = $this->User->Status->find('list',array('order' => 'Status.id'));
 		$campuses = $this->User->Campus->find('list');
 		$this->set(compact('localities', 'statuses', 'campuses'));
 	}

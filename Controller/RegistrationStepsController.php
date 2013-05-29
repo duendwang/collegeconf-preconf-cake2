@@ -13,7 +13,14 @@ class RegistrationStepsController extends AppController {
  * @return void
  */
 	public function index() {
+                //$this->loadModel('UserType');
 		$this->RegistrationStep->recursive = 0;
+                if($this->RegistrationStep->User->UserType->find('list',array('conditions' => array('UserType.user_id =' => $this->Auth->user('id'),'UserType.account_type_id ' => array('2','3'))))) {
+                    $this->paginate = array(
+                        'conditions' => array('RegistrationStep.user_id =' => $this->Auth->user('id')),
+                        'order' => array('RegistrationStep.conference_id' => 'asc', 'RegistrationStep.locality_id' => 'asc')
+                    );
+                }
 		$this->set('registrationSteps', $this->paginate());
 	}
 

@@ -40,6 +40,7 @@ class ConferencesController extends AppController {
 	public function add() {
 		if ($this->request->is('post')) {
 			$this->Conference->create();
+                        //TODO also create registrationSteps rates
 			if ($this->Conference->save($this->request->data)) {
 				$this->Session->setFlash(__('The conference has been saved'));
 				$this->redirect(array('action' => 'index'));

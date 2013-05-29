@@ -1,11 +1,11 @@
 <?php
 App::uses('AppController', 'Controller');
 /**
- * RegistrationTeamAssignments Controller
+ * RegistrationTeamMembers Controller
  *
- * @property RegistrationTeamAssignment $RegistrationTeamAssignment
+ * @property RegistrationTeamMember $RegistrationTeamMember
  */
-class RegistrationTeamAssignmentsController extends AppController {
+class RegistrationTeamMembersController extends AppController {
 
 /**
  * index method
@@ -13,7 +13,7 @@ class RegistrationTeamAssignmentsController extends AppController {
  * @return void
  */
 	public function index() {
-		$this->RegistrationTeamAssignment->recursive = 0;
+		$this->RegistrationTeamMember->recursive = 0;
 		$this->set('registrationTeamAssignments', $this->paginate());
 	}
 
@@ -25,11 +25,11 @@ class RegistrationTeamAssignmentsController extends AppController {
  * @return void
  */
 	public function view($id = null) {
-		if (!$this->RegistrationTeamAssignment->exists($id)) {
+		if (!$this->RegistrationTeamMember->exists($id)) {
 			throw new NotFoundException(__('Invalid registration team assignment'));
 		}
-		$options = array('conditions' => array('RegistrationTeamAssignment.' . $this->RegistrationTeamAssignment->primaryKey => $id));
-		$this->set('registrationTeamAssignment', $this->RegistrationTeamAssignment->find('first', $options));
+		$options = array('conditions' => array('RegistrationTeamMember.' . $this->RegistrationTeamMember->primaryKey => $id));
+		$this->set('registrationTeamMember', $this->RegistrationTeamMember->find('first', $options));
 	}
 
 /**
@@ -39,16 +39,16 @@ class RegistrationTeamAssignmentsController extends AppController {
  */
 	public function add() {
 		if ($this->request->is('post')) {
-			$this->RegistrationTeamAssignment->create();
-			if ($this->RegistrationTeamAssignment->save($this->request->data)) {
+			$this->RegistrationTeamMember->create();
+			if ($this->RegistrationTeamMember->save($this->request->data)) {
 				$this->Session->setFlash(__('The registration team assignment has been saved'));
 				$this->redirect(array('action' => 'index'));
 			} else {
 				$this->Session->setFlash(__('The registration team assignment could not be saved. Please, try again.'));
 			}
 		}
-		$users = $this->RegistrationTeamAssignment->User->find('list');
-		$registrationTeams = $this->RegistrationTeamAssignment->RegistrationTeam->find('list');
+		$users = $this->RegistrationTeamMember->User->find('list');
+		$registrationTeams = $this->RegistrationTeamMember->RegistrationTeam->find('list');
 		$this->set(compact('users', 'registrationTeams'));
 	}
 
@@ -60,22 +60,22 @@ class RegistrationTeamAssignmentsController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
-		if (!$this->RegistrationTeamAssignment->exists($id)) {
+		if (!$this->RegistrationTeamMember->exists($id)) {
 			throw new NotFoundException(__('Invalid registration team assignment'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
-			if ($this->RegistrationTeamAssignment->save($this->request->data)) {
+			if ($this->RegistrationTeamMember->save($this->request->data)) {
 				$this->Session->setFlash(__('The registration team assignment has been saved'));
 				$this->redirect(array('action' => 'index'));
 			} else {
 				$this->Session->setFlash(__('The registration team assignment could not be saved. Please, try again.'));
 			}
 		} else {
-			$options = array('conditions' => array('RegistrationTeamAssignment.' . $this->RegistrationTeamAssignment->primaryKey => $id));
-			$this->request->data = $this->RegistrationTeamAssignment->find('first', $options);
+			$options = array('conditions' => array('RegistrationTeamMember.' . $this->RegistrationTeamMember->primaryKey => $id));
+			$this->request->data = $this->RegistrationTeamMember->find('first', $options);
 		}
-		$users = $this->RegistrationTeamAssignment->User->find('list');
-		$registrationTeams = $this->RegistrationTeamAssignment->RegistrationTeam->find('list');
+		$users = $this->RegistrationTeamMember->User->find('list');
+		$registrationTeams = $this->RegistrationTeamMember->RegistrationTeam->find('list');
 		$this->set(compact('users', 'registrationTeams'));
 	}
 
@@ -87,12 +87,12 @@ class RegistrationTeamAssignmentsController extends AppController {
  * @return void
  */
 	public function delete($id = null) {
-		$this->RegistrationTeamAssignment->id = $id;
-		if (!$this->RegistrationTeamAssignment->exists()) {
+		$this->RegistrationTeamMember->id = $id;
+		if (!$this->RegistrationTeamMember->exists()) {
 			throw new NotFoundException(__('Invalid registration team assignment'));
 		}
 		$this->request->onlyAllow('post', 'delete');
-		if ($this->RegistrationTeamAssignment->delete()) {
+		if ($this->RegistrationTeamMember->delete()) {
 			$this->Session->setFlash(__('Registration team assignment deleted'));
 			$this->redirect(array('action' => 'index'));
 		}
@@ -107,7 +107,7 @@ class RegistrationTeamAssignmentsController extends AppController {
  * @return void
  */
 	public function admin_index() {
-		$this->RegistrationTeamAssignment->recursive = 0;
+		$this->RegistrationTeamMember->recursive = 0;
 		$this->set('registrationTeamAssignments', $this->paginate());
 	}
 
@@ -119,11 +119,11 @@ class RegistrationTeamAssignmentsController extends AppController {
  * @return void
  */
 	public function admin_view($id = null) {
-		if (!$this->RegistrationTeamAssignment->exists($id)) {
+		if (!$this->RegistrationTeamMember->exists($id)) {
 			throw new NotFoundException(__('Invalid registration team assignment'));
 		}
-		$options = array('conditions' => array('RegistrationTeamAssignment.' . $this->RegistrationTeamAssignment->primaryKey => $id));
-		$this->set('registrationTeamAssignment', $this->RegistrationTeamAssignment->find('first', $options));
+		$options = array('conditions' => array('RegistrationTeamMember.' . $this->RegistrationTeamMember->primaryKey => $id));
+		$this->set('registrationTeamAssignment', $this->RegistrationTeamMember->find('first', $options));
 	}
 
 /**
@@ -133,16 +133,16 @@ class RegistrationTeamAssignmentsController extends AppController {
  */
 	public function admin_add() {
 		if ($this->request->is('post')) {
-			$this->RegistrationTeamAssignment->create();
-			if ($this->RegistrationTeamAssignment->save($this->request->data)) {
+			$this->RegistrationTeamMember->create();
+			if ($this->RegistrationTeamMember->save($this->request->data)) {
 				$this->Session->setFlash(__('The registration team assignment has been saved'));
 				$this->redirect(array('action' => 'index'));
 			} else {
 				$this->Session->setFlash(__('The registration team assignment could not be saved. Please, try again.'));
 			}
 		}
-		$users = $this->RegistrationTeamAssignment->User->find('list');
-		$registrationTeams = $this->RegistrationTeamAssignment->RegistrationTeam->find('list');
+		$users = $this->RegistrationTeamMember->User->find('list');
+		$registrationTeams = $this->RegistrationTeamMember->RegistrationTeam->find('list');
 		$this->set(compact('users', 'registrationTeams'));
 	}
 
@@ -154,22 +154,22 @@ class RegistrationTeamAssignmentsController extends AppController {
  * @return void
  */
 	public function admin_edit($id = null) {
-		if (!$this->RegistrationTeamAssignment->exists($id)) {
+		if (!$this->RegistrationTeamMember->exists($id)) {
 			throw new NotFoundException(__('Invalid registration team assignment'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
-			if ($this->RegistrationTeamAssignment->save($this->request->data)) {
+			if ($this->RegistrationTeamMember->save($this->request->data)) {
 				$this->Session->setFlash(__('The registration team assignment has been saved'));
 				$this->redirect(array('action' => 'index'));
 			} else {
 				$this->Session->setFlash(__('The registration team assignment could not be saved. Please, try again.'));
 			}
 		} else {
-			$options = array('conditions' => array('RegistrationTeamAssignment.' . $this->RegistrationTeamAssignment->primaryKey => $id));
-			$this->request->data = $this->RegistrationTeamAssignment->find('first', $options);
+			$options = array('conditions' => array('RegistrationTeamMember.' . $this->RegistrationTeamMember->primaryKey => $id));
+			$this->request->data = $this->RegistrationTeamMember->find('first', $options);
 		}
-		$users = $this->RegistrationTeamAssignment->User->find('list');
-		$registrationTeams = $this->RegistrationTeamAssignment->RegistrationTeam->find('list');
+		$users = $this->RegistrationTeamMember->User->find('list');
+		$registrationTeams = $this->RegistrationTeamMember->RegistrationTeam->find('list');
 		$this->set(compact('users', 'registrationTeams'));
 	}
 
@@ -181,12 +181,12 @@ class RegistrationTeamAssignmentsController extends AppController {
  * @return void
  */
 	public function admin_delete($id = null) {
-		$this->RegistrationTeamAssignment->id = $id;
-		if (!$this->RegistrationTeamAssignment->exists()) {
+		$this->RegistrationTeamMember->id = $id;
+		if (!$this->RegistrationTeamMember->exists()) {
 			throw new NotFoundException(__('Invalid registration team assignment'));
 		}
 		$this->request->onlyAllow('post', 'delete');
-		if ($this->RegistrationTeamAssignment->delete()) {
+		if ($this->RegistrationTeamMember->delete()) {
 			$this->Session->setFlash(__('Registration team assignment deleted'));
 			$this->redirect(array('action' => 'index'));
 		}

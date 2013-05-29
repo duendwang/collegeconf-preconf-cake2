@@ -33,6 +33,58 @@ App::uses('Controller', 'Controller');
  */
 class AppController extends Controller {
 
-	public $components = array('DebugKit.Toolbar','Session');
+    function _flash($message,$type='message') {
+        $messages = (array)$this->Session->read('Message.multiFlash');
+        $messages[] = array(
+            'message'=>$message,
+            'layout'=>'default',
+	    'element'=> 'default',
+	    'params'=>array('class'=>$type),
+        );
+        $this->Session->write('Message.multiFlash', $messages);
+    }
+    
+    public function beforeFilter() {
+        //$this->Auth->allowedActions = array('UserType'); //Allows access to UserType controller without logging in
+        //$this->allow('logout');
+    }
+    
+    public function beforeRender() {
+        if($this->Auth->loggedIn()) {
+            $this->loadModel('Attendee');
+            $this->viewClass = 'Theme'; //Activates use of themes
+            $this->loadModel('UserType'); //To pull UserTypes data
+            if($this->UserType->find('list',array('conditions' => array('UserType.user_id =' => $this->Auth->user('id'),'UserType.account_type_id =' => '1')))) {
+                $this->theme = 'Overseer'; //Set Overseer theme if logged in account is overseer account
+            } if($this->UserType->find('list',array('conditions' => array('UserType.user_id =' => $this->Auth->user('id'),'UserType.account_type_id' => array('2','3'))))) {
+                $this->theme = 'Registration'; //Set Registration theme if logged in account is that of registration team
+            } if($this->UserType->find('list',array('conditions' => array('UserType.user_id =' => $this->Auth->user('id'),'UserType.account_type_id =' => '4')))) {
+                $this->theme = 'LRC'; //Set LRC theme if logged in account is locality account
+                App::import('Controller','Attendees');
+                $Attendees = new AttendeesController;
+                $Attendees->constructClasses();
+                if($Attendees->_requirementCheck() && $this->request['controller'] == 'pages' && $this->request['pass'][0] == 'home') $this->_flash(__('Multiple errors found for saved attendees. Please correct ASAP. Incomplete registrations may be denied or late fees assessed.',true),'error');
+            }
+            $this->loadModel('User');
+            $this->set('User',$this->Auth->user());
+        }
+    }
+    
+    public $components = array(
+        'DebugKit.Toolbar',
+        'Session',
+        'Auth' => array(
+            'loginRedirect' => array('controller' => 'pages', 'action' => 'display', 'home'),
+            'logoutRedirect' => array('controller' => 'users', 'action' => 'login'),
+            //'authorize' => array('Controller')
+        )
+    );
+	
+    /**public function isAuthorized($user) {
+	if (isset($user['id'])) {
+            return true;
+        }
+        return false;
+    }**/
 
 }
