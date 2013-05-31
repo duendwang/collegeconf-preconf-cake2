@@ -1,5 +1,5 @@
-<div class="registrationTeamAssignments index">
-	<h2><?php echo __('Registration Team Assignments'); ?></h2>
+<div class="registrationTeamMembers index">
+	<h2><?php echo __('Registration Team Members'); ?></h2>
 	<table cellpadding="0" cellspacing="0">
 	<tr>
 			<th><?php echo $this->Paginator->sort('id'); ?></th>
@@ -7,19 +7,19 @@
 			<th><?php echo $this->Paginator->sort('registration_team_id'); ?></th>
 			<th class="actions"><?php echo __('Actions'); ?></th>
 	</tr>
-	<?php foreach ($registrationTeamAssignments as $registrationTeamAssignment): ?>
+	<?php foreach ($registrationTeamMembers as $registrationTeamMember): ?>
 	<tr>
-		<td><?php echo h($registrationTeamAssignment['RegistrationTeamAssignment']['id']); ?>&nbsp;</td>
+		<td><?php echo h($registrationTeamMember['RegistrationTeamMember']['id']); ?>&nbsp;</td>
 		<td>
-			<?php echo $this->Html->link($registrationTeamAssignment['User']['id'], array('controller' => 'users', 'action' => 'view', $registrationTeamAssignment['User']['id'])); ?>
+			<?php echo $this->Html->link($registrationTeamMember['User']['id'], array('controller' => 'users', 'action' => 'view', $registrationTeamMember['User']['id'])); ?>
 		</td>
 		<td>
-			<?php echo $this->Html->link($registrationTeamAssignment['RegistrationTeam']['name'], array('controller' => 'registration_teams', 'action' => 'view', $registrationTeamAssignment['RegistrationTeam']['id'])); ?>
+			<?php echo $this->Html->link($registrationTeamMember['RegistrationTeam']['name'], array('controller' => 'registration_teams', 'action' => 'view', $registrationTeamMember['RegistrationTeam']['id'])); ?>
 		</td>
 		<td class="actions">
-			<?php echo $this->Html->link(__('View'), array('action' => 'view', $registrationTeamAssignment['RegistrationTeamAssignment']['id'])); ?>
-			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $registrationTeamAssignment['RegistrationTeamAssignment']['id'])); ?>
-			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $registrationTeamAssignment['RegistrationTeamAssignment']['id']), null, __('Are you sure you want to delete # %s?', $registrationTeamAssignment['RegistrationTeamAssignment']['id'])); ?>
+			<?php echo $this->Html->link(__('View'), array('action' => 'view', $registrationTeamMember['RegistrationTeamMember']['id'])); ?>
+			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $registrationTeamMember['RegistrationTeamMember']['id'])); ?>
+			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $registrationTeamMember['RegistrationTeamMember']['id']), null, __('Are you sure you want to delete # %s?', $registrationTeamMember['RegistrationTeamMember']['id'])); ?>
 		</td>
 	</tr>
 <?php endforeach; ?>

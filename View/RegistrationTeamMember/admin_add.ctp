@@ -1,5 +1,5 @@
-<div class="registrationTeamAssignments form">
-<?php echo $this->Form->create('RegistrationTeamAssignment'); ?>
+<div class="registrationTeamMembers form">
+<?php echo $this->Form->create('RegistrationTeamMember'); ?>
 	<fieldset>
 		<legend><?php echo __('Admin Add Registration Team Assignment'); ?></legend>
 	<?php
