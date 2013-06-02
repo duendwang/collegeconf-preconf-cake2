@@ -16,7 +16,7 @@ class AttendeesController extends AppController {
 		if (is_null($locality)) {
                     $locality = $this->Auth->user('locality_id');
 		}
-                $attendees = $this->Attendee->find('all',array('conditions' => array('Attendee.conference_id' => '3','Attendee.locality_id' => $locality),'recursive' => 0));
+                $attendees = $this->Attendee->find('list',array('conditions' => array('Attendee.conference_id' => '3','Attendee.locality_id' => $locality),'recursive' => 0));
 		foreach ($attendees as $attendee):
                     if(strlen($attendee['Attendee']['gender']) === 0) {$requirement_messages[] = array('Gender information is missing for '.$attendee['Attendee']['first_name'].' '.$attendee['Attendee']['last_name'].'. Please fill in this information.','warning');}
                     if(strlen($attendee['Attendee']['conference_id']) === 0) {$requirement_messages[] = array('A conference has not been selected for '.$attendee['Attendee']['first_name'].' '.$attendee['Attendee']['last_name'].'. Please select a conference.','warning');}
@@ -103,7 +103,7 @@ class AttendeesController extends AppController {
                     $this->set('attendees', $this->paginate());
 		} else {
                     $locality_ids = $this->Attendee->Locality->RegistrationStep->find('list',array('conditions' => array('RegistrationStep.conference_id' => '3','RegistrationStep.user_id =' => $this->Auth->user('id')),'fields' => 'RegistrationStep.locality_id'));
-                    $this->set('localities',$this->Attendee->Locality->find('all',array('conditions' => array('Locality.id' => $locality_ids),'recursive' => 0,'order' => 'Locality.city')));
+                    $this->set('localities',$this->Attendee->Locality->find('all',array('conditions' => array('Locality.id' => $locality_ids),'recursive' => 0,'order' => 'Locality.name')));
                     if(isset($locality)) {
                         $this->paginate = array(
                         'conditions' => array('Attendee.conference_id'=>'3','Attendee.locality_id =' => $locality),//'(Attendee.cancel > "2012-11-01") OR (Attendee.cancel IS NULL)'),
@@ -125,7 +125,7 @@ class AttendeesController extends AppController {
                 $this->loadModel('RegistrationStep');
                 $this->loadModel('Locality');
                 $locality_ids = $this->RegistrationStep->find('list',array('conditions' => array('RegistrationStep.conference_id' => '3','RegistrationStep.user_id =' => $this->Auth->user('id')),'fields' => 'RegistrationStep.locality_id'));
-                $this->set('localities',$this->Locality->find('all',array('conditions' => array('Locality.id' => $locality_ids),'recursive' => 0,'order' => 'Locality.city')));
+                $this->set('localities',$this->Locality->find('all',array('conditions' => array('Locality.id' => $locality_ids),'recursive' => 0,'order' => 'Locality.name')));
                 $this->Attendee->recursive = 0;
                 if(isset($locality)) {
                     $this->paginate = array(
@@ -318,7 +318,7 @@ class AttendeesController extends AppController {
 		$this->set('user',$this->Auth->user());
                 $six_months_future = date('Y-m-d', strtotime('+4 month'));
                 $this->set('conferences', $this->Attendee->Conference->find('list',array('conditions' => array('Conference.start_date > NOW()',"Conference.start_date <= '$six_months_future'"),'fields' => 'Conference.complete_name')));
-                $localities = $this->Attendee->Locality->find('list', array('conditions' => array('Locality.id' => array(2,$this->Auth->user('Locality.id'))), 'fields' => 'Locality.city'));
+                $localities = $this->Attendee->Locality->find('list', array('conditions' => array('Locality.id' => array(2,$this->Auth->user('Locality.id'))), 'fields' => 'Locality.name'));
                 $campuses = $this->Attendee->Campus->find('list');
 		$statuses = $this->Attendee->Status->find('list', array('conditions' => array('Status.id >' => 1), 'order' => 'Status.id'));
 		$lodgings = $this->Attendee->Lodging->find('list');

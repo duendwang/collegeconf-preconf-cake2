@@ -32,7 +32,7 @@ class UsersController extends AppController {
                     //exit;
                     $this->redirect($this->Auth->redirect());
                 } else {
-                    $this->Session->setFlash(__('Invalid username or password, try again'),'failure');
+                    $this->Session->setFlash(__('Invalid username or password. Please make sure caps lock isn\'t on and try again'),'failure');
                     //$this->Session->setFlash(__('wrong'));
                 }
             }

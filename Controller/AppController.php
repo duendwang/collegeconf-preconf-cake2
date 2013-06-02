@@ -68,16 +68,18 @@ class AppController extends Controller {
             $this->loadModel('User');
             $this->set('User',$this->Auth->user());
         }
+        
     }
     
     public $components = array(
         'DebugKit.Toolbar',
+        'Acl',
         'Session',
         'Auth' => array(
             'loginRedirect' => array('controller' => 'pages', 'action' => 'display', 'home'),
             'logoutRedirect' => array('controller' => 'users', 'action' => 'login'),
-            //'authorize' => array('Controller')
-        )
+            //'authorize' => array('Actions' => array('actionPath' => 'controllers'))
+        ),
     );
 	
     /**public function isAuthorized($user) {
