@@ -65,4 +65,20 @@ class AccountType extends AppModel {
 		)
 	);
 
+/**
+ * Act As
+ *
+ * @var string
+ */
+        public $actsAs = array('Acl' => array('type' => 'requester'));
+
+/**
+ * parentNode method
+ *
+ * @return null
+ */
+        public function parentNode() {
+            return null;
+        }
+
 }

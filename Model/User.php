@@ -25,6 +25,13 @@ App::uses('AppModel', 'Model');
 class User extends AppModel {
 
 /**
+ * Act As
+ *
+ * @var string
+ */
+        public $actsAs = array('Acl' => array('type' => 'requester'));
+
+/**
  * Virtual Fields
  */
 
@@ -369,5 +376,27 @@ class User extends AppModel {
             }
             return true;
 	}
+
+/**
+ * parentNode method
+ *
+ * @return array
+ */
+        public function parentNode() {
+            if (!$this->id && empty($this->data)) {
+                return null;
+            }
+            if (isset($this->data['UserType']['account_type_id'])) {
+                $account_type_id = $this->data['UserType']['account_type_id'];
+            } else {
+                $user_type = $this->UserType->find('list',array('conditions' => array('User.id' => $this->id),'order' => 'UserType.account_type_id','fields' => 'UserType.account_type_id'));
+                $account_type_id = reset($user_type);
+            }
+            if (!$account_type_id) {
+                return null;
+            } else {
+                return array('AccountType' => array('id' => $account_type_id));
+            }
+        }
 
 }
