@@ -13,7 +13,8 @@
             background: #ffffff;
         }
 </style>
-<h2>Welcome, church in <?php echo $User['Locality']['city'];?>!</h2>
+
+<h2>Welcome, church in <?php echo $User['Locality']['name'];?>!</h2>
 <h3 style="color:#333">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;What would you like to do?</h3><br><br>
 
 <table>

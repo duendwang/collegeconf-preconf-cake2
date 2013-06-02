@@ -50,7 +50,7 @@ $cakeDescription = __d('cake_dev', 'College Conference Registration');
                                     if(strlen($User['first_name']) > 0) {
                                         echo $User['first_name'], ' ', $User['last_name'];
                                     } else{
-                                        echo 'church in ', $User['Locality']['city'];
+                                        echo 'church in ', $User['Locality']['name'];
                                     }
                                     echo '. (', $this->Html->link('logout', '/users/logout'), ')';?>
                                 </h1>
