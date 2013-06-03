@@ -370,7 +370,7 @@ class User extends AppModel {
  *
  * @return null
  */
-	public function beforeSave() {
+	public function beforeSave($options = array()) {
             if (!empty($this->data[$this->alias]['new_password'])) {
                 $this->data[$this->alias]['password'] = AuthComponent::password($this->data[$this->alias]['new_password']);
             }
