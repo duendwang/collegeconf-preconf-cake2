@@ -8,6 +8,29 @@ App::uses('AppController', 'Controller');
 class FinancesController extends AppController {
 
 /**
+ * contain
+ *
+ * @var array
+ */
+        public $contain = array(
+            'Locality' => array(
+                'fields' => array('Locality.name')
+            ),
+            'Conference' => array(
+                'fields' => array('Conference.code')
+            ),
+            'FinanceType' => array(
+                'fields' => array('FinanceType.name')
+            ),
+            'Creator' => array(
+                'fields' => array('Creator.username')
+            ),
+            'Modifier' => array(
+                'fields' => array('Modifier.username')
+            )
+        );
+
+/**
  * index method
  *
  * @return void

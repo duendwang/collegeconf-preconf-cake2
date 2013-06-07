@@ -8,6 +8,31 @@ App::uses('AppController', 'Controller');
 class AttendeesController extends AppController {
 
 /**
+ * contain
+ *
+ * @var array
+ */
+        private $contain = array(
+            'Campus' => array(
+                'fields' => 'Campus.name'
+            ),
+            'Cancel',
+            'CheckIn',
+            'Conference' => array(
+                'fields' => 'Conference.code'
+            ),
+            'Locality' => array(
+                'fields' => 'Locality.name'
+            ),
+            'Lodging' => array(
+                'fields' => 'Lodging.code'
+            ),
+            'Status' => array(
+                'fields' => 'Status.code'
+            )
+        );
+
+/**
  * requirementCheck method
  *
  * @return $messages
@@ -74,13 +99,15 @@ class AttendeesController extends AppController {
 		$this->Attendee->recursive = 0;
 		if($this->UserType->find('list',array('conditions' => array('UserType.user_id =' => $this->Auth->user('id'),'UserType.account_type_id =' => '4')))) {
                     //$this->set('locality',$this->Auth->user('locality_id'));
-                    $this->paginate = array( 
-                        'conditions' => array('Attendee.conference_id' => '3','Attendee.locality_id =' => $this->Auth->user('locality_id'),'Attendee.cancel' => null),
+                    $this->paginate = array(
+                        'conditions' => array('Attendee.conference_id' => '3','Attendee.locality_id =' => $this->Auth->user('locality_id'),'Attendee.cancel_count' => null),
+                        'contain' => $this->contain,
                         'limit' => 200,
                     );
                     $this->_requirementCheck();
 		} else $this->paginate = array(
                     'conditions' => array('Attendee.conference_id' => '3'),
+                    'contain' => $this->contain,
                     'limit' => 1500
                 );
 		$this->set('attendees', $this->paginate());

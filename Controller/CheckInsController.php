@@ -8,6 +8,20 @@ App::uses('AppController', 'Controller');
 class CheckInsController extends AppController {
 
 /**
+ * contain
+ *
+ * @var array
+ */
+        public $contain = array(
+            'Attendee' => array(
+                'fields' => array('Attendee.name'),
+                'Locality' => array(
+                    'fields' => array('Locality.name')
+                )
+            )
+        );
+
+/**
  * index method
  *
  * @return void

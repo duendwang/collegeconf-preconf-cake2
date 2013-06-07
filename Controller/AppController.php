@@ -88,5 +88,6 @@ class AppController extends Controller {
         }
         return false;
     }**/
+//TODO consider using routing prefixes instead of themes for different roles
 
 }
