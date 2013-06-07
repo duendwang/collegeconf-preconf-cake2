@@ -91,7 +91,8 @@ class Cancel extends AppModel {
 			'foreignKey' => 'attendee_id',
 			'conditions' => '',
 			'fields' => '',
-			'order' => ''
+			'order' => '',
+                        'counterCache' => true
 		),
 		'Conference' => array(
 			'className' => 'Conference',
@@ -115,4 +116,5 @@ class Cancel extends AppModel {
 			'order' => ''
 		)
 	);
+
 }

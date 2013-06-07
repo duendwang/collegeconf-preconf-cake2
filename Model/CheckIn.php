@@ -38,7 +38,9 @@ class CheckIn extends AppModel {
 			'foreignKey' => 'attendee_id',
 			'conditions' => '',
 			'fields' => '',
-			'order' => ''
+			'order' => '',
+                        'counterCache' => true
 		)
 	);
+
 }

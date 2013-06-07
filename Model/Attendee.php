@@ -22,6 +22,8 @@ class Attendee extends AppModel {
 
 /**
  * Virtual Fields
+ * 
+ * @var array
  */
 
         public $virtualFields = array(
@@ -53,7 +55,7 @@ class Attendee extends AppModel {
 		),
 		'first_name' => array(
 			'alpha' => array(
-				'rule' => '/^[a-z\s]+$/i', //TODO
+				'rule' => '/^[a-z\s]+$/i', //TODO copy to all first and last name fields
 				'message' => 'Required to save. Letters only.',
 				'allowEmpty' => false,
 				'required' => true,
@@ -338,8 +340,11 @@ class Attendee extends AppModel {
 			'className' => 'Conference',
 			'foreignKey' => 'conference_id',
 			'conditions' => '',
+                        //'type' => 'left',
 			'fields' => '',
-			'order' => ''
+			'order' => '',
+                        //'counterCache' => 'false',
+                        //'counterScope' => 'false'
 		),
 		'Locality' => array(
 			'className' => 'Locality',
@@ -367,7 +372,8 @@ class Attendee extends AppModel {
 			'foreignKey' => 'lodging_id',
 			'conditions' => '',
 			'fields' => '',
-			'order' => ''
+			'order' => '',
+                        'counterCache' => true
 		),
 		'Creator' => array(
 			'className' => 'User',

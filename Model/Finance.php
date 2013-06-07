@@ -216,6 +216,12 @@ class Finance extends AppModel {
 		)
 	);
 
+/**
+ * beforeSave callback
+ *
+ * return true
+ */
+
         public function beforeSave() {
             if ($this->data['Finance']['charge'] == null || $this->data['Finances']['charge'] == 0) $this->data['Finance']['charge'] = $this->data['Finance']['count'] * $this->data['Finance']['rate']*(-1);
             $this->data['Finance']['balance'] = $this->data['Finance']['payment'] + $this->data['Finance']['charge'];
