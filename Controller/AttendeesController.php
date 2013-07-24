@@ -41,7 +41,7 @@ class AttendeesController extends AppController {
 		if (is_null($locality)) {
                     $locality = $this->Auth->user('locality_id');
 		}
-                $attendees = $this->Attendee->find('list',array('conditions' => array('Attendee.conference_id' => '3','Attendee.locality_id' => $locality),'recursive' => 0));
+                $attendees = $this->Attendee->find('all',array('conditions' => array('Attendee.conference_id' => '3','Attendee.locality_id' => $locality),'recursive' => -1));
 		foreach ($attendees as $attendee):
                     if(strlen($attendee['Attendee']['gender']) === 0) {$requirement_messages[] = array('Gender information is missing for '.$attendee['Attendee']['first_name'].' '.$attendee['Attendee']['last_name'].'. Please fill in this information.','warning');}
                     if(strlen($attendee['Attendee']['conference_id']) === 0) {$requirement_messages[] = array('A conference has not been selected for '.$attendee['Attendee']['first_name'].' '.$attendee['Attendee']['last_name'].'. Please select a conference.','warning');}
