@@ -4,6 +4,7 @@
 	<tr>
 			<th><?php echo $this->Paginator->sort('id'); ?></th>
 			<th><?php echo $this->Paginator->sort('name'); ?></th>
+                        <th><?php echo $this->Paginator->sort('preferred_conference'); ?></th>
 			<th><?php echo $this->Paginator->sort('comment'); ?></th>
 			<th class="actions"><?php echo __('Actions'); ?></th>
 	</tr>
@@ -11,6 +12,7 @@
 	<tr>
 		<td><?php echo h($locality['Locality']['id']); ?>&nbsp;</td>
 		<td><?php echo h($locality['Locality']['name']); ?>&nbsp;</td>
+                <td><?php echo h($locality['Locality']['preferred_conference']); ?>&nbsp;</td>
 		<td><?php echo h($locality['Locality']['comment']); ?>&nbsp;</td>
 		<td class="actions">
 			<?php echo $this->Html->link(__('View'), array('action' => 'view', $locality['Locality']['id'])); ?>
