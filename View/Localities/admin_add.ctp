@@ -4,6 +4,7 @@
 		<legend><?php echo __('Admin Add Locality'); ?></legend>
 	<?php
 		echo $this->Form->input('name');
+                echo $this->Form->input('preferred_conference');
 		echo $this->Form->input('comment');
 	?>
 	</fieldset>

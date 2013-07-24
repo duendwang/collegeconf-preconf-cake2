@@ -11,6 +11,11 @@
 			<?php echo h($locality['Locality']['name']); ?>
 			&nbsp;
 		</dd>
+		<dt><?php echo __('Preferred Conference'); ?></dt>
+		<dd>
+			<?php echo h($locality['Locality']['preferred_conference']); ?>
+			&nbsp;
+		</dd>
 		<dt><?php echo __('Comment'); ?></dt>
 		<dd>
 			<?php echo h($locality['Locality']['comment']); ?>
