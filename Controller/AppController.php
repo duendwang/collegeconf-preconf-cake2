@@ -51,21 +51,15 @@ class AppController extends Controller {
     
     public function beforeRender() {
         if($this->Auth->loggedIn()) {
-            $this->loadModel('Attendee');
             $this->viewClass = 'Theme'; //Activates use of themes
-            $this->loadModel('UserType'); //To pull UserTypes data
-            if($this->UserType->find('list',array('conditions' => array('UserType.user_id =' => $this->Auth->user('id'),'UserType.account_type_id =' => '1')))) {
-                $this->theme = 'Overseer'; //Set Overseer theme if logged in account is overseer account
-            } if($this->UserType->find('list',array('conditions' => array('UserType.user_id =' => $this->Auth->user('id'),'UserType.account_type_id' => array('2','3'))))) {
-                $this->theme = 'Registration'; //Set Registration theme if logged in account is that of registration team
-            } if($this->UserType->find('list',array('conditions' => array('UserType.user_id =' => $this->Auth->user('id'),'UserType.account_type_id =' => '4')))) {
-                $this->theme = 'LRC'; //Set LRC theme if logged in account is locality account
+            $themes = array(1 => 'Overseer',2 => 'Registration',3 => 'Registration',4 => 'LRC');
+            $this->theme = $themes[$this->Auth->user('UserType.account_type_id')];
+            if($this->Auth->user('UserType.account_type_id') == 4) {
                 App::import('Controller','Attendees');
                 $Attendees = new AttendeesController;
                 $Attendees->constructClasses();
                 if($Attendees->_requirementCheck() && $this->request['controller'] == 'pages' && $this->request['pass'][0] == 'home') $this->_flash(__('Multiple errors found for saved attendees. Please correct ASAP. Incomplete registrations may be denied or late fees assessed.',true),'error');
             }
-            $this->loadModel('User');
             $this->set('User',$this->Auth->user());
         }
         
