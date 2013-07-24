@@ -65,6 +65,7 @@ class UsersController extends AppController {
                         if (!isset($current_conference)) $current_conference = $near_conferences[count($near_conferences)-1]['Conference']['id'];
                     } else $current_conference = $near_conferences[0]['Conference']['id'];
                     $this->Session->write('Conference.default',$current_conference);
+                    $this->Session->write('Conference.selected',$current_conference); //Automatically selects default conference.
                     
                     $this->redirect($this->Auth->redirect());
                 } else {
