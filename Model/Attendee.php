@@ -21,6 +21,31 @@ App::uses('AppModel', 'Model');
 class Attendee extends AppModel {
 
 /**
+ * contain
+ *
+ * @var array
+ */
+        public $contain = array(
+            'Campus' => array(
+                'fields' => 'Campus.name'
+            ),
+            'Cancel',
+            'CheckIn',
+            'Conference' => array(
+                'fields' => 'Conference.code'
+            ),
+            'Locality' => array(
+                'fields' => 'Locality.name'
+            ),
+            'Lodging' => array(
+                'fields' => 'Lodging.code'
+            ),
+            'Status' => array(
+                'fields' => 'Status.code'
+            )
+        );
+
+/**
  * construct method
  * 
  * @return void

@@ -13,6 +13,29 @@ App::uses('AppModel', 'Model');
 class Finance extends AppModel {
 
 /**
+ * contain
+ *
+ * @var array
+ */
+        public $contain = array(
+            'Locality' => array(
+                'fields' => array('Locality.name')
+            ),
+            'Conference' => array(
+                'fields' => array('Conference.code')
+            ),
+            'FinanceType' => array(
+                'fields' => array('FinanceType.name')
+            ),
+            'Creator' => array(
+                'fields' => array('Creator.username')
+            ),
+            'Modifier' => array(
+                'fields' => array('Modifier.username')
+            )
+        );
+
+/**
  * Validation rules
  *
  * @var array

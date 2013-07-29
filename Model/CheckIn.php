@@ -8,6 +8,20 @@ App::uses('AppModel', 'Model');
 class CheckIn extends AppModel {
 
 /**
+ * contain
+ *
+ * @var array
+ */
+        public $contain = array(
+            'Attendee' => array(
+                'fields' => array('Attendee.name'),
+                'Locality' => array(
+                    'fields' => array('Locality.name')
+                )
+            )
+        );
+
+/**
  * Validation rules
  *
  * @var array
