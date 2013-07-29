@@ -12,7 +12,7 @@
     </style>
 <?php echo $this->Form->create('Attendee'); ?>
 	<h2><?php echo 'Add Conference Attendee'; ?></h2>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Please fill out the form completely. Please note that this is for full-time registrants only.<br><br><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Please fill out the form completely. <u>Please note that this is for full-time registrants only.</u><br><br><br>
 	<?php /*<p align='center'><?php echo $this->Form->input('submitter', array('label' => array('class' =>'label', 'text' => 'What is your name?', 'style' => 'clear: none; display: inline'), 'div' => false,'style' => 'align: center; display: inline; width: 300px; padding: 0px'));?></p>*/?>
         <br>
             <center>
@@ -20,7 +20,9 @@
                         $this->Form->input('new_one', array('label' => false, 'div' => false, 'style' => 'float: none')),
                         'new one?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
                         $this->Form->input('conf_contact', array('label' => false, 'div' => false, 'style' => 'float: none')),
-                        'conference contact? <br><br>';
+                        'conference contact?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
+                        $this->Form->input('nurse', array('label' => false, 'type' => 'checkbox','div' => false, 'style' => 'float: none')),
+                        'conference-designated nurse? <br><br>';
                 echo 'Which conference is this attendee registering for? ', $this->Form->input('conference_id', array('empty' => true,'default' => $conference_id,'label' => false, 'div' => false, 'style' => 'float: none'));?>
             </center>
                 <?php echo $this->Form->input('locality_id', array('label' => false,'hidden' => true, 'default' => $locality));
@@ -58,11 +60,12 @@
             <table>
 		<tr>
 			<td width=100></td>
-			<td><?php //echo $this->Form->input('group');
-                            echo $this->Form->input('group',array('type' => 'select', 'empty' => true, 'default' => null, 'options' => array('SCCS' => 'SCCS','LOCAL' => 'LOCAL','HOST' => 'HOST','NONE' => 'NONE')));?></td>
+			<td><?php echo $this->Form->input('group'); //Use this at Big Bear
+                            //echo $this->Form->input('group',array('type' => 'select', 'empty' => true, 'default' => null, 'options' => array('SCCS' => 'SCCS','LOCAL' => 'LOCAL','HOST' => 'HOST','NONE' => 'NONE'))); //Use this at Anaheim?></td>
 			<td><?php echo $this->Form->input('allergies',array('type' => 'select', 'empty' => true, 'options' => array('C' => 'Cats','D' => 'Dogs','O' => 'Other','CD' => 'Cats + Dogs','CO' => 'Cats + Other','DO' => 'Dogs + Other','CDO' => 'Cats, Dogs, and Other')));?></td>
-			<td><?php echo $this->Form->input('other_allergies', array('input' => 'If other, please indicate:'));?></td>
+			<td><?php echo $this->Form->input('other_allergies', array('label' => 'If other, please indicate:'));?></td>
                 </tr>
+<!-- Uncomment for Anaheim
                 <tr>
                     <td colspan="3">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Please fill out for any prearranged hospitality.</td>
                 </tr>
@@ -72,6 +75,7 @@
                     <td><?php echo $this->Form->input('host_address');?></td>
                     <td><?php echo $this->Form->input('host_phone');?></td>
 		</tr>
+-->
             </table>
         </fieldset>
         <fieldset>
