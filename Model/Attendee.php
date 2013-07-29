@@ -21,14 +21,15 @@ App::uses('AppModel', 'Model');
 class Attendee extends AppModel {
 
 /**
- * Virtual Fields
+ * construct method
  * 
- * @var array
+ * @return void
  */
 
-        public $virtualFields = array(
-            'name' => "CONCAT(Attendee.first_name,' ',Attendee.last_name)"
-        );
+        public function __construct($id = false, $table = null, $ds = null) {
+            parent::__construct($id, $table, $ds);
+            $this->virtualFields['name'] = sprintf('CONCAT(%s.first_name, " ", %s.last_name)', $this->alias, $this->alias);
+        }
 
 /**
  * Display field

@@ -16,13 +16,20 @@ App::uses('AppModel', 'Model');
  */
 class Conference extends AppModel {
 
+/**    public function conference_test() {
+        return 'hello';
+    }*/
+    
 /**
- * Virtual Fields
+ * construct method
+ * 
+ * @return void
  */
 
-        public $virtualFields = array(
-            'name' => "CONCAT(Conference.term,' ',Conference.year,' ',Conference.part,': ',Conference.start_date)"
-        );
+        public function __construct($id = false, $table = null, $ds = null) {
+            parent::__construct($id, $table, $ds);
+            $this->virtualFields['name'] = sprintf('CONCAT(%s.term, " ", %s.year, " ", %s.part, ": ", %s.start_date)', $this->alias, $this->alias, $this->alias, $this->alias);
+        }
 
 /**
  * Display field

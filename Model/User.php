@@ -31,13 +31,16 @@ class User extends AppModel {
  */
         public $actsAs = array('Acl' => array('type' => 'requester'));
 
-/**
- * Virtual Fields
+/*
+ * constuct method
+ * 
+ * @return void
  */
 
-        public $virtualFields = array(
-            'name' => "CONCAT(User.first_name,' ',User.last_name)"
-        );
+       public function __construct($id = false, $table = null, $ds = null) {
+           parent::__construct($id, $table, $ds);
+           $this->virtualFields['name'] = sprintf('CONCAT(%s.first_name, " ", %s.last_name)', $this->alias, $this->alias);
+       }
 
 /**
  * Display field

@@ -11,13 +11,16 @@ class Lodging extends AppModel {
 
 //TODO Set up virtual field according to location of conference, and displayField accordinngly
 
-/**
- * Virtual Fields
+/*
+ * construct method
+ * 
+ * @return void
  */
 
-        /*public $virtualFields = array(
-            'BB_name' => "CONCAT(Lodging.name,' ',Lodging.room)",            
-        );*/
+        public function __construct($id = false, $table = null, $ds = null) {
+            parent::__construct($id, $table, $ds);
+            $this->virtualFields['BB_name'] = sprintf('CONCAT(%s.name, " ", %s.room)', $this->alias, $this->alias);
+        }
 
 /**
  * Display field
@@ -25,7 +28,7 @@ class Lodging extends AppModel {
  * @var string
  */
 	
-        public $displayField = 'name';
+        public $displayField = 'BB_name';
 
 /**
  * Validation rules
