@@ -16,12 +16,12 @@
 			<th><?php echo $this->Paginator->sort('status_id'); ?></th>
 			<th><?php echo $this->Paginator->sort('cell_phone'); ?></th>
 			<th><?php echo $this->Paginator->sort('email'); ?></th>
-			<?php /**<th><?php echo $this->Paginator->sort('city_state'); ?></th>**/?>
-			<th><?php echo $this->Paginator->sort('host_name'); ?></th>
+			<?php /**<th><?php <th><?php echo $this->Paginator->sort('city_state'); ?></th>**/?>
+			<?php /**<th><?php echo $this->Paginator->sort('host_name'); ?></th>
 			<th><?php echo $this->Paginator->sort('host_address'); ?></th>
-			<th><?php echo $this->Paginator->sort('host_phone'); ?></th>
+			<th><?php echo $this->Paginator->sort('host_phone'); ?></th>**/?>
 			<?php /**<th><?php echo $this->Paginator->sort('lodging_id'); ?></th>**/?>
-			<th><?php echo $this->Paginator->sort('Date Added'); ?></th>
+			<th><?php echo $this->Paginator->sort('created','Date Added'); ?></th>
                         <?php /**<th><?php echo $this->Paginator->sort('Added by:'); ?></th>**/?>
 			<th><?php echo $this->Paginator->sort('rate'); ?></th>
 			<th><?php echo $this->Paginator->sort('comment'); ?></th>
@@ -30,13 +30,14 @@
 			<th><?php echo $this->Paginator->sort('paid_date'); ?></th>
 	</tr>
 	<?php
-	foreach ($attendees as $attendee): ?>
-	<tr>
+	foreach ($attendees as $attendee):
+            if ($attendee['Attendee']['cancel_count'] ==1) echo '<tr style="text-decoration:line-through">';
+            else echo '<tr>';?>
                 <td>
-                    <?php echo $this->Html->link(__(h($attendee['Conference']['code'])), array('controller' => 'conferences','action' => 'view', $attendee['Conference']['id'])); ?>
+                    <?php echo $this->Html->link(__(h($attendee['Conference']['code'])), array('controller' => 'conferences','action' => 'view', $attendee['Attendee']['conference_id'])); ?>
                 </td>
-                <td><?php echo h($attendee['Attendee']['conf_contact']); ?>&nbsp;</td>
-		<td><?php echo h($attendee['Attendee']['new_one']); ?>&nbsp;</td>
+                <td><?php if ($attendee['Attendee']['conf_contact']) echo 'X'; ?>&nbsp;</td>
+		<td><?php if ($attendee['Attendee']['new_one']) echo 'X'; ?>&nbsp;</td>
 		<td><?php echo $this->Html->link(__(h($attendee['Attendee']['first_name'])), array('action' => 'edit', $attendee['Attendee']['id'])); ?></td>
 		<td><?php echo $this->Html->link(__(h($attendee['Attendee']['last_name'])), array('action' => 'edit', $attendee['Attendee']['id'])); ?></td>
 		<td><?php echo h($attendee['Attendee']['gender']); ?>&nbsp;</td>
@@ -46,25 +47,25 @@
 		</td>**/?>
 		<td><?php echo h($attendee['Attendee']['group']); ?>&nbsp;</td>
                 <td><?php echo h($attendee['Attendee']['allergies']); ?>&nbsp;</td>
-                <td><?php echo h($attendee['Status']['name']); ?>&nbsp;</td>
+                <td><?php echo h($attendee['Status']['code']); ?>&nbsp;</td>
                 <?php /**<td>
 			<?php echo $this->Html->link($attendee['Status']['name'], array('controller' => 'statuses', 'action' => 'view', $attendee['Status']['id'])); ?>
 		</td>**/?>
 		<td><?php echo h($attendee['Attendee']['cell_phone']); ?>&nbsp;</td>
 		<td><?php echo h($attendee['Attendee']['email']); ?>&nbsp;</td>
 		<?php /**<td><?php echo h($attendee['Attendee']['city_state']); ?>&nbsp;</td>**/?>
-		<td><?php echo h($attendee['Attendee']['host_name']); ?>&nbsp;</td>
+		<?php /**<td><?php echo h($attendee['Attendee']['host_name']); ?>&nbsp;</td>
 		<td><?php echo h($attendee['Attendee']['host_address']); ?>&nbsp;</td>
-		<td><?php echo h($attendee['Attendee']['host_phone']); ?>&nbsp;</td>
+		<td><?php echo h($attendee['Attendee']['host_phone']); ?>&nbsp;</td>**/?>
                 <?php /**<td><?php echo h($attendee['Attendee']['lodging_id']); ?>&nbsp;</td>**/?>
-		<td><?php echo h($attendee['Attendee']['add']); ?>&nbsp;</td>
+		<td><?php echo h($attendee['Attendee']['created']); ?>&nbsp;</td>
                 <?php /**<td><?php echo h($attendee['Attendee']['submitter']); ?>&nbsp;</td>**/?>
 		<td><?php echo h($attendee['Attendee']['rate']); ?>&nbsp;</td>
 		<td><?php echo h($attendee['Attendee']['comment']); ?>&nbsp;</td>
 		<td><?php echo h($attendee['Attendee']['amt_paid']); ?>&nbsp;</td>
 		<td><?php echo h($attendee['Attendee']['check_num']); ?>&nbsp;</td>
 		<td><?php echo h($attendee['Attendee']['paid_date']); ?>&nbsp;</td>
-		<td class="actions">
+		<td class="actions" style="text-decoration: none">
 			<?php //echo $this->Html->link(__('View'), array('action' => 'view', $attendee['Attendee']['id'])); ?>
 			<?php //echo $this->Html->link(__('Edit'), array('action' => 'edit', $attendee['Attendee']['id'])); ?>
 			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $attendee['Attendee']['id']), null, __('Are you sure you want to delete # %s?', $attendee['Attendee']['id'])); ?>
