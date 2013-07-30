@@ -30,8 +30,8 @@ class Conference extends AppModel {
             $conference_deadlines = $this->Attendee->Conference->ConferenceDeadlineException->ConferenceDeadline->find('all',array('conditions' => array('ConferenceDeadline.id' => array('6','8'))));
             $conference_deadline_exceptions = $this->Attendee->Conference->ConferenceDeadlineException->find('all',array('conditions' => array('ConferenceDeadlineException.conference_id' => $conference,'ConferenceDeadlineException.conference_deadline_id' => array('6','8'))));
             foreach ($conference_deadlines as $deadline):
-                if ($deadline['ConferenceDeadline']['id'] === '6') $first_deadline = strtotime('-'.(($deadline['ConferenceDeadline']['weeks_before']*7)+(6-$deadline['ConferenceDeadline']['weekday_id'])-1).' days',strtotime($conference_start[$conference]));
-                if ($deadline['ConferenceDeadline']['id'] === '8') $second_deadline = strtotime('-'.(($deadline['ConferenceDeadline']['weeks_before']*7)+(6-$deadline['ConferenceDeadline']['weekday_id'])-1).' days',strtotime($conference_start[$conference]));
+                if ($deadline['ConferenceDeadline']['id'] === '6') $first_deadline = strtotime('-'.(($deadline['ConferenceDeadline']['weeks_before']*7)+(6-$deadline['ConferenceDeadline']['weekday_id'])-1).' days',strtotime($start_date[$conference]));
+                if ($deadline['ConferenceDeadline']['id'] === '8') $second_deadline = strtotime('-'.(($deadline['ConferenceDeadline']['weeks_before']*7)+(6-$deadline['ConferenceDeadline']['weekday_id'])-1).' days',strtotime($start_date[$conference]));
             endforeach;
             if (!empty($conference_deadline_exceptions)) {
                 foreach ($conference_deadline_exceptions as $exception):
@@ -39,10 +39,10 @@ class Conference extends AppModel {
                     if ($exception['ConferenceDeadlineException']['conference_deadline_id'] === '8') $second_deadline = strtotime('+1 day',strtotime($exception['ConferenceDeadlineException']['date']));
                 endforeach;
             }
-            $conference_dates['start_date'] = strtotime($start_date);
+            $conference_dates['start'] = strtotime($start_date[$conference]);
             $conference_dates['first_deadline'] = $first_deadline;
             $conference_dates['second_deadline'] = $second_deadline;
-            $conference_dates['end'] = strtotime('+2 days',$conference_dates['start_date']);
+            $conference_dates['end'] = strtotime('+2 days',$conference_dates['start']);
             return $conference_dates;
         }
 
