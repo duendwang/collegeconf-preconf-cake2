@@ -11,6 +11,45 @@ class Rate extends AppModel {
 //TODO need to set up displayfield and virtualfield to pull from other tables
 
 /**
+ * conferenceRates method
+ * 
+ * @return array
+ */
+
+        public function conference_rates ($conference_location = null) {
+            $conference_rates = $this->find('all',array('conditions' => array('Rate.conference_location_id' => $conference_location),'recursive' => 0));
+            foreach ($conference_rates as $rate):
+                switch ($rate['Rate']['rate_type_id']) {
+                    case 1:
+                        $rates['ft']['cost'] = $rate['Rate']['cost'];
+                        $rates['ft']['latefee_applies'] = $rate['Rate']['latefee_applies'];
+                        break;
+                    case 2:
+                        $rates['ft_nolodging']['cost'] = $rate['Rate']['cost'];
+                        $rates['ft_nolodging']['latefee_applies'] = $rate['Rate']['latefee_applies'];
+                        break;
+                    case 3:
+                        $rates['ftta']['cost'] = $rate['Rate']['cost'];
+                        $rates['ftta']['latefee_applies'] = $rate['Rate']['latefee_applies'];
+                        break;
+                    case 5:
+                        $rates['nurse']['cost'] = $rate['Rate']['cost'];
+                        $rates['nurse']['latefee_applies'] = $rate['Rate']['latefee_applies'];
+                        break;
+                    case 6:
+                        $rates['serving']['cost'] = $rate['Rate']['cost'];
+                        $rates['serving']['latefee_applies'] = $rate['Rate']['latefee_applies'];
+                        break;
+                    case 8:
+                        $rates['late_fee']['cost'] = $rate['Rate']['cost'];
+                        $rates['late_fee']['latefee_applies'] = $rate['Rate']['latefee_applies'];
+                        break;
+                }
+            endforeach;
+            return $rates;
+        }
+
+/**
  * Display field
  *
  * @var string
