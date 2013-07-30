@@ -17,8 +17,9 @@
 	<?php
 	//debug($attendees);
         //exit;
-        foreach ($attendees as $attendee): ?>
-	<tr>
+        foreach ($attendees as $attendee):
+            if ($attendee['Attendee']['cancel_count'] ==1) echo '<tr style="text-decoration:line-through">';
+            else echo '<tr>';?>
 		<td><?php echo h($attendee['Attendee']['first_name']); ?>&nbsp;</td>
 		<td><?php echo h($attendee['Attendee']['last_name']); ?>&nbsp;</td>
 		<td><?php echo h($attendee['Attendee']['gender']); ?>&nbsp;</td>
