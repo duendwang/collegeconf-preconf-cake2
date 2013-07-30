@@ -16,6 +16,35 @@ App::uses('AppModel', 'Model');
  */
 class Conference extends AppModel {
 
+/*
+ * function currentTermConferences
+ * 
+ * return array
+ * 
+ * Get all conferences in this term
+ */
+    public function current_term_conferences() {
+        $current_month = date('n');
+        $current_year = date('Y');
+        
+        //determine the current term
+        if ($current_month <= 6) $current_term = 'Spring';
+        else if ($current_month >= 7) $current_term = 'Fall';
+        
+        //find all conferences in current term
+        $near_conferences = $this->find('list',array(
+            'conditions' => array(
+                'Conference.year' => $current_year,
+                'Conference.term' => $current_term
+                ),
+            'fields' => 'Conference.id',
+            'order' => 'Conference.start_date',
+            'recursive' => -1
+        ));
+        
+        return $near_conferences;
+    }
+
 /**
  * conferenceDates method
  * 
