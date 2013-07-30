@@ -38,25 +38,25 @@
 	foreach ($attendees as $attendee): ?>
 	<tr>
 		<td><?php echo h($attendee['Attendee']['id']); ?>&nbsp;</td>
-		<td><?php echo h($attendee['Attendee']['barcode']); ?>&nbsp;</td>
+		<td><?php echo h($attendee['Conference']['code'].$attendee['Attendee']['id']); ?>&nbsp;</td>
 		<td>
-			<?php echo $this->Html->link($attendee['Conference']['id'], array('controller' => 'conferences', 'action' => 'view', $attendee['Conference']['id'])); ?>
+			<?php echo $this->Html->link($attendee['Conference']['code'], array('controller' => 'conferences', 'action' => 'view', $attendee['Attendee']['conference_id'])); ?>
 		</td>
 		<td><?php echo h($attendee['Attendee']['first_name']); ?>&nbsp;</td>
 		<td><?php echo h($attendee['Attendee']['last_name']); ?>&nbsp;</td>
 		<td><?php echo h($attendee['Attendee']['gender']); ?>&nbsp;</td>
 		<td>
-			<?php echo $this->Html->link($attendee['Locality']['id'], array('controller' => 'localities', 'action' => 'view', $attendee['Locality']['id'])); ?>
+			<?php echo $this->Html->link($attendee['Locality']['name'], array('controller' => 'localities', 'action' => 'view', $attendee['Attendee']['locality_id'])); ?>
 		</td>
 		<td>
-			<?php echo $this->Html->link($attendee['Campus']['name'], array('controller' => 'campuses', 'action' => 'view', $attendee['Campus']['id'])); ?>
+			<?php echo $this->Html->link($attendee['Campus']['name'], array('controller' => 'campuses', 'action' => 'view', $attendee['Attendee']['campus_id'])); ?>
 		</td>
 		<td><?php echo h($attendee['Attendee']['lrc']); ?>&nbsp;</td>
 		<td><?php echo h($attendee['Attendee']['conf_contact']); ?>&nbsp;</td>
 		<td><?php echo h($attendee['Attendee']['new_one']); ?>&nbsp;</td>
 		<td><?php echo h($attendee['Attendee']['group']); ?>&nbsp;</td>
 		<td>
-			<?php echo $this->Html->link($attendee['Status']['name'], array('controller' => 'statuses', 'action' => 'view', $attendee['Status']['id'])); ?>
+			<?php echo $this->Html->link($attendee['Status']['name'], array('controller' => 'statuses', 'action' => 'view', $attendee['Attendee']['status_id'])); ?>
 		</td>
 		<td><?php echo h($attendee['Attendee']['cell_phone']); ?>&nbsp;</td>
 		<td><?php echo h($attendee['Attendee']['email']); ?>&nbsp;</td>
@@ -65,7 +65,7 @@
 		<td><?php echo h($attendee['Attendee']['host_address']); ?>&nbsp;</td>
 		<td><?php echo h($attendee['Attendee']['host_phone']); ?>&nbsp;</td>
 		<td>
-			<?php echo $this->Html->link($attendee['Lodging']['name'], array('controller' => 'lodgings', 'action' => 'view', $attendee['Lodging']['id'])); ?>
+			<?php echo $this->Html->link($attendee['Lodging']['name'], array('controller' => 'lodgings', 'action' => 'view', $attendee['Attendee']['lodging_id'])); ?>
 		</td>
 		<td><?php echo h($attendee['Attendee']['add']); ?>&nbsp;</td>
 		<td><?php echo h($attendee['Attendee']['PT']); ?>&nbsp;</td>
