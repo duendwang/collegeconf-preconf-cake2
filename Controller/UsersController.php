@@ -95,21 +95,22 @@ class UsersController extends AppController {
  * @return void
  */
 	public function index() {
-                $this->loadModel('UserType');
+                //$this->loadModel('UserType');
 		$this->User->recursive = 0;
-                if($this->UserType->find('list',array('conditions' => array('UserType.user_id =' => $this->Auth->user('id'),'UserType.account_type_id' => array('1','2','3'))))) {
+                if (in_array($this->Auth->user('UserType.account_type_id'),array(1, 2, 3))) {
+                //if($this->UserType->find('list',array('conditions' => array('UserType.user_id =' => $this->Auth->user('id'),'UserType.account_type_id' => array('1','2','3'))))) {
                     $this->paginate = array(
                         'conditions' => array('UserType.account_type_id' => '1',"UserType.user_id NOT IN ('1','19')",'User.active' => 1),
                         'order' => 'User.last_name',
                         'limit' => 50,
                         'recursive' => 2,
-                        'joins' => array(
+                        /**'joins' => array(
                             array(
                                 'table' => 'user_types',
                                 'alias' => 'UserType',
                                 'type' => 'inner',
                                 'conditions' => array('UserType.user_id=User.id')
-                        ))
+                        ))**/
                     );
                     //$this->set('overseer_users',$this->UserType->find('all',array('conditions' => array('UserType.account_type_id' => '1',"UserType.user_id NOT IN ('1','19')"),'recursive' => 2,'order' => 'User.last_name')));
                     $this->set('overseer_users',$this->paginate());
@@ -118,13 +119,13 @@ class UsersController extends AppController {
                         'order' => 'User.last_name',
                         'limit' => 50,
                         'recursive' => 2,
-                        'joins' => array(
+                        /**'joins' => array(
                             array(
                                 'table' => 'user_types',
                                 'alias' => 'UserType',
                                 'type' => 'inner',
                                 'conditions' => array('UserType.user_id=User.id')
-                        ))
+                        ))**/
                     );
                     $this->set('registration_users',$this->paginate());
                     //$this->set('registration_users',$this->UserType->find('all',array('conditions' => array('UserType.account_type_id' => array('2','3'), 'UserType.user_id !=' => 1),'recursive' => 2,'order' => 'User.last_name')));
