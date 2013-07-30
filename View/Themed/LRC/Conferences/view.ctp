@@ -1,11 +1,11 @@
 <div class="content">
 <h2><?php  echo __('Conference'); ?></h2>
 	<dl>
-		<dt><?php echo __('Id'); ?></dt>
+		<?php /**<dt><?php echo __('Id'); ?></dt>
 		<dd>
 			<?php echo h($conference['Conference']['id']); ?>
 			&nbsp;
-		</dd>
+		</dd>**/?>
 		<dt><?php echo __('Term'); ?></dt>
 		<dd>
 			<?php echo h($conference['Conference']['term']); ?>
@@ -23,7 +23,7 @@
 		</dd>
 		<dt><?php echo __('Conference Location'); ?></dt>
 		<dd>
-			<?php echo $this->Html->link($conference['ConferenceLocation']['name'], array('controller' => 'conference_locations', 'action' => 'view', $conference['ConferenceLocation']['id'])); ?>
+			<?php echo h($conference['ConferenceLocation']['name']); ?>
 			&nbsp;
 		</dd>
 		<dt><?php echo __('Start Date'); ?></dt>
