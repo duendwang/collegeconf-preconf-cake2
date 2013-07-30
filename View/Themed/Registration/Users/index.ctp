@@ -17,7 +17,7 @@
 		<td><?php echo h($overseer_user['User']['last_name']); ?>&nbsp;</td>
 		<td><?php echo h($overseer_user['User']['cell_phone']); ?>&nbsp;</td>
 		<td><?php echo h($overseer_user['User']['email']); ?>&nbsp;</td>
-		<td><?php echo h($overseer_user['Locality']['city']); ?>&nbsp;</td>
+		<td><?php echo h($overseer_user['Locality']['name']); ?>&nbsp;</td>
 		<!--<td class="actions">
 			<?php /**echo $this->Html->link(__('View'), array('action' => 'view', $user['User']['id'])); ?>
 			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $user['User']['id'])); ?>
@@ -46,7 +46,7 @@
 		<td><?php echo h($registration_user['User']['gender']); ?>&nbsp;</td>
 		<td><?php echo h($registration_user['User']['cell_phone']); ?>&nbsp;</td>
 		<td><?php echo h($registration_user['User']['email']); ?>&nbsp;</td>
-		<td><?php echo h($registration_user['Locality']['city']); ?>&nbsp;</td>
+		<td><?php echo h($registration_user['Locality']['name']); ?>&nbsp;</td>
 		<!--<td class="actions">
 			<?php /**echo $this->Html->link(__('View'), array('action' => 'view', $user['User']['id'])); ?>
 			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $user['User']['id'])); ?>
