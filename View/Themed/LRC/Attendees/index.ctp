@@ -68,7 +68,7 @@
 		<td class="actions" style="text-decoration: none">
 			<?php //echo $this->Html->link(__('View'), array('action' => 'view', $attendee['Attendee']['id'])); ?>
 			<?php //echo $this->Html->link(__('Edit'), array('action' => 'edit', $attendee['Attendee']['id'])); ?>
-			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $attendee['Attendee']['id']), null, __('Are you sure you want to delete # %s?', $attendee['Attendee']['id'])); ?>
+			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $attendee['Attendee']['id']), null, __('Are you sure you want to delete # %s?', $attendee['Attendee']['name'])); ?>
 		</td>
 	</tr>
 <?php endforeach; ?>
