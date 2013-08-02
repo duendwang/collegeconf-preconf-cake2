@@ -52,7 +52,7 @@ class AppController extends Controller {
     public function beforeRender() {
         if($this->Auth->loggedIn()) {
             $this->viewClass = 'Theme'; //Activates use of themes
-            $themes = array(1 => 'Overseer',2 => 'Registration',3 => 'Registration',4 => 'LRC');
+            $themes = array(1 => 'Overseer',2 => 'Registration',3 => 'Registration',4 => 'LRC',5 => 'Cashier');
             $this->theme = $themes[$this->Auth->user('UserType.account_type_id')];
             if($this->Auth->user('UserType.account_type_id') == 4) {
                 App::import('Controller','Attendees');
