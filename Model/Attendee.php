@@ -57,6 +57,19 @@ class Attendee extends AppModel {
         }
 
 /**
+ * beforeSave callback
+ *
+ * return true
+ */
+
+        public function beforeSave($options = array()) {
+            if (isset($this->data[$this->alias]['modified'])) {
+                unset($this->data[$this->alias]['modified']);
+            }
+            return true;
+        }
+
+/**
  * Display field
  *
  * @var string
