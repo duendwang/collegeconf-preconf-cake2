@@ -15,6 +15,8 @@ App::uses('AppModel', 'Model');
  * @property RegistrationStep $RegistrationStep
  */
 class Conference extends AppModel {
+    
+    //App::uses('CakeSession', 'Model/Datasource');
 
 /*
  * function currentTermConferences
@@ -53,11 +55,11 @@ class Conference extends AppModel {
 
         public function conference_dates($conference = null) {
             if ($conference == null) {
-                $conference = $this->Session->read('Conference.default');
+                $conference = $_SESSION['Conference']['default'];
             }
-            $start_date = $this->Attendee->Conference->find('list',array('conditions' => array('Conference.id' => $conference),'fields' => 'Conference.start_date'));
-            $conference_deadlines = $this->Attendee->Conference->ConferenceDeadlineException->ConferenceDeadline->find('all',array('conditions' => array('ConferenceDeadline.id' => array('6','8'))));
-            $conference_deadline_exceptions = $this->Attendee->Conference->ConferenceDeadlineException->find('all',array('conditions' => array('ConferenceDeadlineException.conference_id' => $conference,'ConferenceDeadlineException.conference_deadline_id' => array('6','8'))));
+            $start_date = $this->find('list',array('conditions' => array('Conference.id' => $conference),'fields' => 'Conference.start_date'));
+            $conference_deadlines = $this->ConferenceDeadlineException->ConferenceDeadline->find('all',array('conditions' => array('ConferenceDeadline.id' => array('6','8'))));
+            $conference_deadline_exceptions = $this->ConferenceDeadlineException->find('all',array('conditions' => array('ConferenceDeadlineException.conference_id' => $conference,'ConferenceDeadlineException.conference_deadline_id' => array('6','8'))));
             foreach ($conference_deadlines as $deadline):
                 if ($deadline['ConferenceDeadline']['id'] === '6') $first_deadline = strtotime('-'.(($deadline['ConferenceDeadline']['weeks_before']*7)+(6-$deadline['ConferenceDeadline']['weekday_id'])-1).' days',strtotime($start_date[$conference]));
                 if ($deadline['ConferenceDeadline']['id'] === '8') $second_deadline = strtotime('-'.(($deadline['ConferenceDeadline']['weeks_before']*7)+(6-$deadline['ConferenceDeadline']['weekday_id'])-1).' days',strtotime($start_date[$conference]));
