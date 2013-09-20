@@ -205,9 +205,6 @@ class AttendeesController extends AppController {
  */
 	public function add() {
 		if ($this->request->is('post')) {
-                    debug($this->request->data);
-                    debug($this->Auth->user());
-                    exit;
 			$this->Attendee->create();
                         //Adds other allergy information to comments
                         if ($this->request->data['Attendee']['other_allergies']) {
