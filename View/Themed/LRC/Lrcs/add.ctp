@@ -1,17 +1,42 @@
-<div class="lrcs form">
+<div class="content">
+    <style>
+        table {
+            margin-bottom: 0px;
+	}
+        table tr td {
+            border-bottom:0px;
+        }
+        table tr:nth-child(even) {
+            background: #ffffff;
+        }
+    </style>
 <?php echo $this->Form->create('Lrc'); ?>
 	<fieldset>
 		<legend><?php echo __('Add LRC'); ?></legend>
-	<?php
-		echo $this->Form->input('first_name');
-                echo $this->Form->input('last_name');
-		echo $this->Form->hidden('locality_id', array('default' => $locality));
-		echo $this->Form->input('gender', array('type' => 'select', 'empty' => true, 'options' => array('B' => 'Brother','S' => 'Sister','C' => 'Couple')));
-		echo $this->Form->input('cell_phone', array('label' => 'Cell Phone (numbers only)'));
-		echo $this->Form->input('email');
-		echo $this->Form->input('comment');
-		echo $this->Form->input('active');
-	?>
+                <table>
+                    <tr>
+                        <td width='100'></td>
+                        <td><?php echo $this->Form->input('first_name');?></td>
+                        <td><?php echo $this->Form->input('last_name');?></td>
+                        <td><?php echo $this->Form->input('gender', array('type' => 'select', 'empty' => true, 'options' => array('B' => 'Brother','S' => 'Sister')));?></td>
+                    </tr>
+                    <tr>
+                        <td width='100'></td>
+                        <td><?php echo $this->Form->input('cell_phone', array('label' => 'Cell Phone (XXX-XXX-XXXX)'));?></td>
+                        <td><?php echo $this->Form->input('email');?></td>
+                        <td><?php echo '<br>'.$this->Form->input('active',array('default' => 1));
+                            echo $this->Form->hidden('locality_id', array('default' => $locality));?></td>
+                    </tr>
+                    <tr>
+                        <td width='100'></td>
+                        <td colspan='3'><?php echo $this->Form->input('comment');?></td>
+                    </tr>
+                    <tr>
+                        <td width='100'></td>
+                        
+                            
+                    </tr>
+                </table>
 	</fieldset>
 <?php echo $this->Form->end(__('Submit')); ?>
 </div>

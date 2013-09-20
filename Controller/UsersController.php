@@ -186,12 +186,17 @@ class UsersController extends AppController {
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->User->save($this->request->data)) {
-				$this->Session->setFlash(__('The user has been saved'));
-				$this->redirect(array('action' => 'index'));
+				$this->Session->setFlash(__('The user has been saved'),'success');
+				if ($this->Auth->user('UserType.account_type_id') == 4) {
+                                    $this->redirect(array('controller' => 'pages','action' => 'display','home'));
+                                } else {
+                                    $this->redirect(array('action' => 'index'));
+                                }
 			} else {
-				$this->Session->setFlash(__('The user could not be saved. Please, try again.'));
+				$this->Session->setFlash(__('The user could not be saved. Please, try again.'),'failure');
 			}
-		} elseif (($this->UserType->find('list',array('conditions' => array('UserType.user_id =' => $this->Auth->user('id'),'UserType.account_type_id =' => '4'))) && $id == $this->Auth->user('id')) | $this->UserType->find('list',array('conditions' => array('UserType.user_id =' => $this->Auth->user('id'),'UserType.account_type_id <' => '4')))) { //LRC account types can only edit their own account, all other account types without restriction
+		} elseif (($this->Auth->user('UserType.account_type_id') == 4 && $id == $this->Auth->user('id')) | $this->Auth->user('UserType.account_type_id') < 4) {
+                    //LRC account types can only edit their own account, all other account types without restriction
                     $this->request->data = $this->User->read(null, $id);
 		} else {
                     $this->Session->setFlash(__('You are not authorized to view this page'),'failure');
@@ -199,7 +204,7 @@ class UsersController extends AppController {
                     //$options = array('conditions' => array('User.' . $this->User->primaryKey => $id));
                     //$this->request->data = $this->User->find('first', $options);
 		}
-                $this->set('Lrcs', $this->Lrc->find('all', array('conditions' => array('Lrc.locality_id =' => $this->Auth->user('locality_id')))));
+                $this->set('Lrcs', $this->User->Locality->Lrc->find('all', array('conditions' => array('Lrc.locality_id =' => $this->Auth->user('locality_id')))));
 		$localities = $this->User->Locality->find('list');
 		$statuses = $this->User->Status->find('list',array('order' => 'Status.id'));
 		$campuses = $this->User->Campus->find('list');

@@ -41,14 +41,19 @@ class LrcsController extends AppController {
 		if ($this->request->is('post')) {
 			$this->Lrc->create();
 			if ($this->Lrc->save($this->request->data)) {
-				$this->Session->setFlash(__('The lrc has been saved'));
-				$this->redirect(array('action' => 'index'));
+				$this->Session->setFlash(__('The LRC has been saved'),'success');
+				if ($this->Auth->user('UserType.account_type_id') == 4) {
+                                    $this->redirect(array('controller' => 'users','action' => 'edit',$this->Auth->user('id')));
+                                } else {
+                                    $this->redirect(array('action' => 'index'));
+                                }
 			} else {
-				$this->Session->setFlash(__('The lrc could not be saved. Please, try again.'));
+				$this->Session->setFlash(__('The LRC could not be saved. Please, try again.'));
 			}
 		}
-		$localities = $this->Lrc->Locality->find('list');
-		$this->set(compact('localities'));
+		$locality = $this->Auth->user('locality_id');
+                $localities = $this->Lrc->Locality->find('list');
+		$this->set(compact('locality','localities'));
 	}
 
 /**
@@ -64,17 +69,22 @@ class LrcsController extends AppController {
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Lrc->save($this->request->data)) {
-				$this->Session->setFlash(__('The lrc has been saved'));
-				$this->redirect(array('action' => 'index'));
+				$this->Session->setFlash(__('The LRC has been saved'),'success');
+				if ($this->Auth->user('UserType.account_type_id') == 4) {
+                                    $this->redirect(array('controller' => 'users','action' => 'edit',$this->Auth->user('id')));
+                                } else {
+                                    $this->redirect(array('action' => 'index'));
+                                }
 			} else {
-				$this->Session->setFlash(__('The lrc could not be saved. Please, try again.'));
+				$this->Session->setFlash(__('The LRC could not be saved. Please, try again.'),'failure');
 			}
 		} else {
 			$options = array('conditions' => array('Lrc.' . $this->Lrc->primaryKey => $id));
 			$this->request->data = $this->Lrc->find('first', $options);
 		}
-		$localities = $this->Lrc->Locality->find('list');
-		$this->set(compact('localities'));
+		$locality = $this->Auth->user('locality_id');
+                $localities = $this->Lrc->Locality->find('list');
+		$this->set(compact('locality','localities'));
 	}
 
 /**
@@ -91,10 +101,14 @@ class LrcsController extends AppController {
 		}
 		$this->request->onlyAllow('post', 'delete');
 		if ($this->Lrc->delete()) {
-			$this->Session->setFlash(__('Lrc deleted'));
-			$this->redirect(array('action' => 'index'));
+			$this->Session->setFlash(__('LRC deleted'),'success');
+                        if ($this->Auth->user('UserType.account_type_id') == 4) {
+                            $this->redirect(array('controller' => 'users','action' => 'edit',$this->Auth->user('id')));
+                        } else {
+                            $this->redirect(array('action' => 'index'));
+                        }
 		}
-		$this->Session->setFlash(__('Lrc was not deleted'));
+		$this->Session->setFlash(__('LRC was not deleted'),'failure');
 		$this->redirect(array('action' => 'index'));
 	}
 

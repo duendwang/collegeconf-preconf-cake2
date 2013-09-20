@@ -32,6 +32,14 @@ class Finance extends AppModel {
             ),
             'Modifier' => array(
                 'fields' => array('Modifier.username')
+            ),
+            'FinanceAttendee' => array(
+                'AddAttendee' => array(
+                    'fields' => 'AddAttendee.name'
+                ),
+                'CancelAttendee' => array(
+                    'fields' => 'CancelAttendee.name'
+                )
             )
         );
 
