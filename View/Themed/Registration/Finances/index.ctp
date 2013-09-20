@@ -25,7 +25,7 @@
 	<?php
 	foreach ($finances as $finance): ?>
 	<tr>
-		<td><?php echo $this->Html->link(__($finance['Finance']['id']),array('action' => 'edit',$finance['Finance']['locality_id'])); ?>&nbsp;</td>
+		<td><?php echo $this->Html->link(__($finance['Finance']['id']),array('action' => 'edit',$finance['Finance']['id'])); ?>&nbsp;</td>
 		<td><?php echo h($finance['Conference']['code']); ?></td>
 		<td><?php echo h($finance['Finance']['receive_date']); ?>&nbsp;</td>
 		<td><?php echo h($finance['Locality']['name']); ?></td>
