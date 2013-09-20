@@ -205,6 +205,9 @@ class AttendeesController extends AppController {
  */
 	public function add() {
 		if ($this->request->is('post')) {
+                    debug($this->request->data);
+                    debug($this->Auth->user());
+                    exit;
 			$this->Attendee->create();
                         //Adds other allergy information to comments
                         if ($this->request->data['Attendee']['other_allergies']) {
@@ -446,7 +449,7 @@ class AttendeesController extends AppController {
 			}
 		}
                 $conferences = $this->Attendee->Conference->find('list',array('conditions' => array('Conference.id' => $this->Attendee->Conference->current_term_conferences())));
-		$this->set('locality', $this->Auth->user('Locality.id'));
+		$this->set('locality', $this->Auth->user('locality_id'));
                 $locality_ids = $this->Attendee->Locality->RegistrationStep->find('list',array('conditions' => array('RegistrationStep.conference_id' => $this->Session->read('Conference.default'),'RegistrationStep.user_id =' => $this->Auth->user('id')),'fields' => 'RegistrationStep.locality_id'));
                 if (in_array($this->Auth->user('UserType.account_type_id'),array(2, 3))) {
                     $localities = $this->Attendee->Locality->find('list', array('conditions' => array('Locality.id' => $locality_ids)));
