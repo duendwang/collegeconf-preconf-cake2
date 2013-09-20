@@ -446,10 +446,12 @@ class AttendeesController extends AppController {
 			}
 		}
                 $conferences = $this->Attendee->Conference->find('list',array('conditions' => array('Conference.id' => $this->Attendee->Conference->current_term_conferences())));
-		$this->set('locality', $this->Auth->user('locality_id'));
+		$locality = $this->Auth->user('locality_id');
                 $locality_ids = $this->Attendee->Locality->RegistrationStep->find('list',array('conditions' => array('RegistrationStep.conference_id' => $this->Session->read('Conference.default'),'RegistrationStep.user_id =' => $this->Auth->user('id')),'fields' => 'RegistrationStep.locality_id'));
                 if (in_array($this->Auth->user('UserType.account_type_id'),array(2, 3))) {
                     $localities = $this->Attendee->Locality->find('list', array('conditions' => array('Locality.id' => $locality_ids)));
+                } elseif ($this->Auth->user('UserType.account_type_id') == 4) {
+                    $localities = $this->Attendee->Locality->find('list',array('conditions' => array('Locality.id' => $locality)));
                 }
                 //$localities = $this->Attendee->Locality->find('list');
 		$campuses = $this->Attendee->Campus->find('list');
@@ -461,7 +463,7 @@ class AttendeesController extends AppController {
                 $this->set('gender',$this->Session->read('Attendee.gender'));
                 $this->set('campus_id',$this->Session->read('Attendee.campus_id'));
 
-		$this->set(compact('conferences', 'localities', 'campuses', 'statuses', 'lodgings', 'creators', 'modifiers'));
+		$this->set(compact('conferences', 'locality', 'localities', 'campuses', 'statuses', 'lodgings', 'creators', 'modifiers'));
 	}
 
 /**
