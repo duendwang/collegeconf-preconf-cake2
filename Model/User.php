@@ -62,7 +62,7 @@ class User extends AppModel {
 				'allowEmpty' => false,
 				'required' => true,
 				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+				'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
 		'password' => array(
@@ -132,7 +132,7 @@ class User extends AppModel {
 				'allowEmpty' => false,
 				'required' => true,
 				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+				'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
 	);
@@ -152,13 +152,14 @@ class User extends AppModel {
 			'fields' => '',
 			'order' => ''
 		),
-		'UserType' => array(
+                'UserType' => array(
 			'className' => 'UserType',
 			'foreignKey' => 'user_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
 		)
+		
 	);
 
 /**
@@ -365,7 +366,7 @@ class User extends AppModel {
 			'finderQuery' => '',
 			'counterQuery' => ''
 		),
-		
+                
 	);
 
 /**
@@ -392,7 +393,7 @@ class User extends AppModel {
             if (isset($this->data['UserType']['account_type_id'])) {
                 $account_type_id = $this->data['UserType']['account_type_id'];
             } else {
-                $user_type = $this->UserType->find('list',array('conditions' => array('User.id' => $this->id),'order' => 'UserType.account_type_id','fields' => 'UserType.account_type_id'));
+                $user_type = $this->UserType->find('list',array('conditions' => array('UserType.user_id' => $this->id),'order' => 'UserType.account_type_id','fields' => 'UserType.account_type_id'));
                 $account_type_id = reset($user_type);
             }
             if (!$account_type_id) {

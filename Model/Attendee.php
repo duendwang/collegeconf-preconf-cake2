@@ -63,8 +63,10 @@ class Attendee extends AppModel {
  */
 
         public function beforeSave($options = array()) {
-            if (isset($this->data[$this->alias]['modified'])) {
-                unset($this->data[$this->alias]['modified']);
+            if (empty($this->data[$this->alias]['id'])) {
+                $this->data[$this->alias]['creator_id'] = $_SESSION['Auth']['User']['id'];
+            } else {
+                $this->data[$this->alias]['modifier_id'] = $_SESSION['Auth']['User']['id'];
             }
             return true;
         }
@@ -366,7 +368,8 @@ class Attendee extends AppModel {
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
-		)
+		),
+		
 	);
 
 /**
@@ -449,10 +452,10 @@ class Attendee extends AppModel {
 			'finderQuery' => '',
 			'counterQuery' => ''
 		),
-		'AttendeeFinanceAdd' => array(
+                'AttendeeFinanceAdd' => array(
 			'className' => 'AttendeesFinance',
 			'foreignKey' => 'add_attendee_id',
-			'dependent' => false,
+			//'dependent' => false,
 			'conditions' => '',
 			'fields' => '',
 			'order' => '',
@@ -465,7 +468,7 @@ class Attendee extends AppModel {
 		'AttendeeFinanceCancel' => array(
 			'className' => 'AttendeesFinance',
 			'foreignKey' => 'cancel_attendee_id',
-			'dependent' => false,
+			//'dependent' => false,
 			'conditions' => '',
 			'fields' => '',
 			'order' => '',

@@ -62,14 +62,14 @@ class AttendeesFinance extends AppModel {
 			'fields' => '',
 			'order' => ''
 		),
-		'Add' => array(
+		'AddAttendee' => array(
 			'className' => 'Attendee',
 			'foreignKey' => 'add_attendee_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
 		),
-		'Cancel' => array(
+		'CancelAttendee' => array(
 			'className' => 'Attendee',
 			'foreignKey' => 'cancel_attendee_id',
 			'conditions' => '',

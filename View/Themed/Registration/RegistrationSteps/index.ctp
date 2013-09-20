@@ -32,13 +32,13 @@
 	<tr>
 		<!--<td><?php //echo h($registrationStep['RegistrationStep']['id']); ?>&nbsp;</td>-->
 		<td>
-			<?php echo $this->Html->link($registrationStep['Conference']['part'], array('controller' => 'conferences', 'action' => 'view', $registrationStep['Conference']['id'])); ?>
+			<?php echo $this->Html->link($registrationStep['Conference']['code'], array('controller' => 'conferences', 'action' => 'view', $registrationStep['Conference']['id'])); ?>
 		</td>
 		<td>
-			<?php echo $this->Html->link($registrationStep['Locality']['city'], array('controller' => 'localities', 'action' => 'view', $registrationStep['Locality']['id'])); ?>
+			<?php echo $this->Html->link($registrationStep['Locality']['name'], array('controller' => 'localities', 'action' => 'view', $registrationStep['Locality']['id'])); ?>
 		</td>
 		<!--<td>
-			<?php echo $this->Html->link($registrationStep['User']['id'], array('controller' => 'users', 'action' => 'view', $registrationStep['User']['id'])); ?>
+			<?php //echo $this->Html->link($registrationStep['User']['id'], array('controller' => 'users', 'action' => 'view', $registrationStep['User']['id'])); ?>
 		</td>-->
 		<td><?php echo h($registrationStep['RegistrationStep']['instructions_sent']); ?>&nbsp;</td>
 		<td><?php echo h($registrationStep['RegistrationStep']['receipt_confirmation']); ?>&nbsp;</td>
@@ -59,11 +59,6 @@
 		<td><?php echo h($registrationStep['RegistrationStep']['second_check_send']); ?>&nbsp;</td>
 		<td><?php echo h($registrationStep['RegistrationStep']['compose_final_summary']); ?>&nbsp;</td>
 		<td><?php echo h($registrationStep['RegistrationStep']['third_check_send']); ?>&nbsp;</td>
-		<!--<td class="actions">
-			<?php echo $this->Html->link(__('View'), array('action' => 'view', $registrationStep['RegistrationStep']['id'])); ?>
-			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $registrationStep['RegistrationStep']['id'])); ?>
-			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $registrationStep['RegistrationStep']['id']), null, __('Are you sure you want to delete # %s?', $registrationStep['RegistrationStep']['id'])); ?>
-		</td>-->
 	</tr>
 <?php endforeach; ?>
 	</table>

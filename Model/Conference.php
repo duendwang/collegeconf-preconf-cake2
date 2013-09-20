@@ -119,7 +119,7 @@ class Conference extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 			'maxlength' => array(
-				'rule' => array('maxlength',4),
+				'rule' => array('maxlength', 4),
 				//'message' => 'Your custom message here',
 				//'allowEmpty' => false,
 				//'required' => false,

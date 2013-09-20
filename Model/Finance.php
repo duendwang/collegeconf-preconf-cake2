@@ -42,8 +42,14 @@ class Finance extends AppModel {
  */
 
         public function beforeSave($options = array()) {
-            if ($this->data['Finance']['charge'] == null || $this->data['Finances']['charge'] == 0) $this->data['Finance']['charge'] = $this->data['Finance']['count'] * $this->data['Finance']['rate']*(-1);
-            $this->data['Finance']['balance'] = $this->data['Finance']['payment'] + $this->data['Finance']['charge'];
+            if (empty($this->data[$this->alias]['id'])) {
+                $this->data[$this->alias]['creator_id'] = $_SESSION['Auth']['User']['id'];
+            } else {
+                $this->data[$this->alias]['modifier_id'] = $_SESSION['Auth']['User']['id'];
+            }
+            
+            if ($this->data[$this->alias]['charge'] == null || $this->data[$this->alias]['charge'] == 0) $this->data[$this->alias]['charge'] = $this->data[$this->alias]['count'] * $this->data[$this->alias]['rate']*(-1);
+            $this->data[$this->alias]['balance'] = $this->data[$this->alias]['payment'] + $this->data[$this->alias]['charge'];
             return true;
         }
 
@@ -137,8 +143,8 @@ class Finance extends AppModel {
 			'money' => array(
 				'rule' => array('money'),
 				//'message' => 'Your custom message here',
-				'allowEmpty' => false,
-				'required' => true,
+				'allowEmpty' => true,
+				'required' => false,
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),

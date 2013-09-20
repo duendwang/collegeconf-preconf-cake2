@@ -40,7 +40,7 @@
                 <td width="100"></td>
                 <td><?php echo $this->Form->input('first_name');?></td>
                 <td><?php echo $this->Form->input('last_name');?></td>
-                <td><?php echo $this->Form->input('gender', array('type' => 'select', 'empty' => true, 'options' => array('B' => 'Brother','S' => 'Sister','C' => 'Couple')));?></td>
+                <td><?php echo $this->Form->input('gender', array('type' => 'select', 'empty' => true, 'options' => array('B' => 'Brother','S' => 'Sister')));?></td>
             </tr>
             <tr>
                 <td width="100"></td>

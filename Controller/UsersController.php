@@ -67,6 +67,10 @@ class UsersController extends AppController {
                     $this->Session->write('Conference.default',$current_conference);
                     $this->Session->write('Conference.selected',$current_conference); //Automatically selects default conference.
                     
+                    //Set last_login field for user account
+                    $this->User->id = $this->Auth->user('id');
+                    $this->User->saveField('last_login',date('Y-m-d h:i:s',strtotime('now')));
+                    
                     $this->redirect($this->Auth->redirect());
                 } else {
                     $this->Session->setFlash(__('Invalid username or password. Please make sure caps lock isn\'t on and try again'),'failure');

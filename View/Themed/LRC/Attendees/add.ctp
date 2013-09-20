@@ -26,8 +26,8 @@
                 echo 'Which conference is this attendee registering for? ', $this->Form->input('conference_id', array('empty' => true,'default' => $conference_id,'label' => false, 'div' => false, 'style' => 'float: none'));?>
             </center>
                 <?php echo $this->Form->input('locality_id', array('label' => false,'hidden' => true, 'default' => $locality));
-                echo $this->Form->hidden('add', array('label' => false));
-                echo $this->Form->hidden('rate', array('label' => false));?>
+                //echo $this->Form->hidden('created', array('label' => false));
+                //echo $this->Form->hidden('rate', array('label' => false));?>
         
         <fieldset>
             <legend><?php echo __('Personal');?><hr width="500"></legend>
@@ -65,7 +65,7 @@
 			<td><?php echo $this->Form->input('allergies',array('type' => 'select', 'empty' => true, 'options' => array('C' => 'Cats','D' => 'Dogs','O' => 'Other','CD' => 'Cats + Dogs','CO' => 'Cats + Other','DO' => 'Dogs + Other','CDO' => 'Cats, Dogs, and Other')));?></td>
 			<td><?php echo $this->Form->input('other_allergies', array('label' => 'If other, please indicate:'));?></td>
                 </tr>
-<!-- Uncomment for Anaheim
+<?php /** Uncomment for Anaheim
                 <tr>
                     <td colspan="3">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Please fill out for any prearranged hospitality.</td>
                 </tr>
@@ -75,7 +75,7 @@
                     <td><?php echo $this->Form->input('host_address');?></td>
                     <td><?php echo $this->Form->input('host_phone');?></td>
 		</tr>
--->
+**/?>
             </table>
         </fieldset>
         <fieldset>

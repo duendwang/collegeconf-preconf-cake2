@@ -1,7 +1,6 @@
 <div class="content">
-	<h2><?php echo __('Finance Final Summary'); ?></h2>
+	<h2><?php echo __('Finance Summary'); ?></h2>
         <br><?php echo $this->Html->link('View Registration Summary',array('controller' => 'attendees','action' => 'summary'));?><br><br>
-        <?php //print_r($localities); ?>
         <table cellpadding="0" cellspacing="0">
 	<tr>
 			<th><?php echo $this->Paginator->sort('receive_date'); ?></th>
@@ -19,9 +18,9 @@
 	<tr>
 		<td><?php echo h($finance['Finance']['receive_date']); ?>&nbsp;</td>
 		<td>
-			<?php echo h($finance['Locality']['city']); ?>
+			<?php echo h($finance['Locality']['name']); ?>
 		</td>
-		<td><?php echo h($finance['Finance']['description']); ?>&nbsp;</td>
+		<td><?php echo h($finance['FinanceType']['name']); ?>&nbsp;</td>
 		<td><?php echo h($finance['Finance']['count']); ?>&nbsp;</td>
 		<td><?php echo h($finance['Finance']['rate']); ?>&nbsp;</td>
 		<td><?php echo h($finance['Finance']['charge']); ?>&nbsp;</td>

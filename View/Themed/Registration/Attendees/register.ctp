@@ -32,13 +32,13 @@
 			<td width=100></td>
 			<td><?php echo $this->Form->input('first_name', array('default' => $user['first_name']));?></td>
 			<td><?php echo $this->Form->input('last_name', array('default' => $user['last_name']));?></td>
-			<td><?php echo $this->Form->input('gender', array('type' => 'select', 'empty' => true, 'options' => array('B' => 'Brother','S' => 'Sister','C' => 'Couple'),'default' => $user['gender']));?></td>
+			<td><?php echo $this->Form->input('gender', array('type' => 'select', 'empty' => true, 'options' => array('B' => 'Brother','S' => 'Sister'),'default' => $user['gender']));?></td>
 		</tr>
 		<tr>
 			<td width=100></td>
 			<td><?php echo $this->Form->input('cell_phone', array('default' => $user['cell_phone']));?></td>
 			<td><?php echo $this->Form->input('email', array('default' => $user['email']));?></td>
-			<td><?php echo $this->Form->input('city_state', array('label' => 'City, State of Residence','default' => $user['city_state']));?></td>
+			<?php /**<td><?php echo $this->Form->input('city_state', array('label' => 'City, State of Residence','default' => $user['city_state']));?></td>**/?>
 		</tr>
 		<tr>
 			<td width=100></td>

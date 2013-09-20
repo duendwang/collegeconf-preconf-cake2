@@ -1,19 +1,47 @@
 <div class="content">
+    <style>
+        table {
+            margin-bottom: 0px;
+	}
+        table tr td {
+            border-bottom:0px;
+        }
+        table tr:nth-child(even) {
+            background: #ffffff;
+        }
+    </style>
 <?php echo $this->Form->create('Finance'); ?>
 	<fieldset>
-		<legend><?php echo __('Edit Finance'); ?></legend>
-	<?php
-		echo $this->Form->input('conference_id');
-		echo $this->Form->input('locality_id');
-		echo $this->Form->input('receive_date',array('label' => 'Date'));
-		echo $this->Form->input('description',array('options' => array('Pre-registration' => 'Pre-registration','Late pre-registration' => 'Late pre-registration','Replacement' => 'Replacement','On-site Registration' => 'On-site Registration','Payment' => 'Payment','Cancellation' => 'Cancellation')));
-		echo $this->Form->input('count');
-		echo $this->Form->input('rate');
-		echo $this->Form->input('charge',array('label' => 'Charge (leave blank unless directed to fill in)'));
-		echo $this->Form->input('payment');
-		echo $this->Form->input('balance',array('hidden' => true,'label' => false));
-		echo $this->Form->input('comment');
-	?>
+		<legend><?php echo __('Add Finance'); ?></legend>
+	<table>
+                <tr>
+			<td width=100></td>
+			<td><?php echo $this->Form->input('conference_id');?></td>
+			<td><?php echo $this->Form->input('locality_id');?></td>
+		</tr>
+		<tr>
+			<td width=100></td>
+			<td><?php echo $this->Form->input('receive_date',array('label' => 'Date'));?></td>
+			<td><?php echo $this->Form->input('finance_type_id',array('label' => 'Description'));?></td>
+		</tr>
+		<tr>
+			<td width=100></td>
+			<td><?php echo $this->Form->input('count');?></td>
+			<td><?php echo $this->Form->input('rate');?></td>
+		</tr>
+		<tr>
+			<td width=100></td>
+                        <td><?php echo $this->Form->input('charge',array('label' => 'Charge (leave blank unless directed to fill in)'));?></td>
+			<td>
+                            <?php echo $this->Form->input('payment');
+                            echo $this->Form->input('balance',array('hidden' => true,'label' => false));?>
+                        </td>
+		</tr>
+                <tr>
+			<td width=100></td>
+			<td colspan="3"><?php echo $this->Form->input('comment');?></td>
+		</tr>
+            </table>
 	</fieldset>
 <?php echo $this->Form->end(__('Submit')); ?>
 </div>
