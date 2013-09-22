@@ -44,15 +44,16 @@ $cakeDescription = __d('cake_dev', 'College Conference Registration');
                     <table>
                         <tr>
                             <td><h1><?php echo $this->Html->link($cakeDescription, '/'); ?></h1></td>
-                            <?php if(isset($User)) {?>
+                            <?php if(isset($user)) {?>
                             <td align="right" style="text-align:center; font-size:10"><h1><?php
                                 echo 'Hello, ';
-                                    if(strlen($User['first_name']) > 0) {
-                                        echo $User['first_name'], ' ', $User['last_name'];
+                                    if(strlen($user['first_name']) > 0) {
+                                        echo $user['first_name'], ' ', $user['last_name'];
                                     } else{
-                                        echo 'church in ', $User['Locality']['name'];
+                                        echo 'church in ', $user['Locality']['name'];
                                     }
-                                    echo '. (', $this->Html->link('logout', '/users/logout'), ')';?>
+                                    echo '. (', $this->Html->link('logout', '/users/logout'), ', ';
+                                    echo $this->Html->link('help',$link).')';?>
                                 </h1>
                             </td>
                             <?php }?>

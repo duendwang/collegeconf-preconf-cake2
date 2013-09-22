@@ -14,7 +14,7 @@
         }
 </style>
 
-<h2>Welcome, church in <?php echo $User['Locality']['name'];?>!</h2>
+<h2>Welcome, church in <?php echo $user['Locality']['name'];?>!</h2>
 <h3 style="color:#333">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;What would you like to do?</h3><br><br>
 
 <table>
@@ -26,7 +26,7 @@
         </td>
         <td>
             <p><?php echo $this->Html->link('View Conference Information',array('action' => 'information'));?></p>
-            <p><?php echo $this->Html->link('Edit Account Preferences',array('controller' => 'users','action' => 'edit',$User['id']));?></p>
+            <p><?php echo $this->Html->link('Edit Account Preferences',array('controller' => 'users','action' => 'edit',$user['id']));?></p>
         </td>
     </tr>
 </table>

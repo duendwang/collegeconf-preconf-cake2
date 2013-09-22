@@ -60,7 +60,9 @@ class AppController extends Controller {
                 $Attendees->constructClasses();
                 if($Attendees->_requirementCheck() && $this->request['controller'] == 'pages' && $this->request['pass'][0] == 'home') $this->_flash(__('Multiple errors found for saved attendees. Please correct ASAP. Incomplete registrations may be denied or late fees assessed.',true),'error');
             }
-            $this->set('User',$this->Auth->user());
+            $link = 'http://wiki.college-conference.com/lrc/index.php?title='.ucwords($this->request->params['controller']).':'.ucwords($this->request->params['action']);
+            $user = $this->Auth->user();
+            $this->set(compact('user','link'));
         }
         
     }

@@ -455,7 +455,7 @@ class AttendeesController extends AppController {
                 }
                 //$localities = $this->Attendee->Locality->find('list');
 		$campuses = $this->Attendee->Campus->find('list');
-		$statuses = $this->Attendee->Status->find('list', array(/**'conditions' => array('Status.id >' => 1), **/'order' => 'Status.id'));
+		$statuses = $this->Attendee->Status->find('list', array('conditions' => array('Status.id >' => 1), 'order' => 'Status.id'));
 		//$lodgings = $this->Attendee->Lodging->find('list');
 		//$creators = $this->Attendee->Creator->find('list');
 		//$modifiers = $this->Attendee->Modifier->find('list');
