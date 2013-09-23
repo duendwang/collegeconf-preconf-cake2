@@ -1,4 +1,12 @@
 <div class="users form">
+    <style>
+        body {
+            background: #003d4c;
+        }
+        #content {
+            overflow: auto;
+        }
+    </style>
 <?php //echo $this->Session->flash('auth'); ?>
     <?php //print_r($this->Auth->User);?>
 <?php echo $this->Form->create('User');?>

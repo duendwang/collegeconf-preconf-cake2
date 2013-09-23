@@ -12,6 +12,9 @@
         table tr:nth-child(even) {
             background: #ffffff;
         }
+        body {
+            background: #003d4c;
+        }
 </style>
 
 <h2>Welcome, church in <?php echo $user['Locality']['name'];?>!</h2>

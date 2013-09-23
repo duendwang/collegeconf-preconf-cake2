@@ -2,6 +2,12 @@
 
 
 ?>
+    <style>
+        body {
+            background: #003d4c;
+        }
+    </style>
+
 <h2>Welcome, <?php echo $user['first_name'];?>!</h2>
 <h3 style="color:#333">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;What would you like to do?</h3><br><br>
 
