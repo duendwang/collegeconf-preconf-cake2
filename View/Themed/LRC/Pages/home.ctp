@@ -28,7 +28,7 @@
             <p><?php echo $this->Html->link('View Summaries','/finances/summary');?></p>
         </td>
         <td>
-            <p><?php echo $this->Html->link('View Conference Information',array('action' => 'information'));?></p>
+            <p><?php echo $this->Html->link('View Conference Information','http://wiki.college-conference.com/lrc/index.php?title=Pages:Display');?></p>
             <p><?php echo $this->Html->link('Edit Account Preferences',array('controller' => 'users','action' => 'edit',$user['id']));?></p>
         </td>
     </tr>
