@@ -87,7 +87,7 @@ class Attendee extends AppModel {
 		'conference_id' => array(
 			'numeric' => array(
 				'rule' => array('numeric'),
-				//'message' => 'Your custom message here',
+				'message' => 'Please select a conference',
 				'allowEmpty' => false,
 				'required' => true,
 				//'last' => false, // Stop validation after this rule
@@ -223,7 +223,7 @@ class Attendee extends AppModel {
 		'cell_phone' => array(
 			'phone' => array(
 				'rule' => array('phone',null,'us'),
-				'message' => 'Valid US phone number',
+				'message' => 'Valid US number',
 				'allowEmpty' => true,
 				'required' => false,
 				//'last' => false, // Stop validation after this rule

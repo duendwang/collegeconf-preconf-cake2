@@ -441,7 +441,9 @@ class AttendeesController extends AppController {
                                     $this->Session->write('Attendee.campus_id',$this->request->data['Attendee']['campus_id']);
                                     $this->redirect(array('action' => 'add'));
                                 }
-			} else {
+			} elseif (empty($this->request->data['Attendee']['conference_id'])) {
+				$this->Session->setFlash(__('A conference was not selected. The attendee could not be saved.'),'failure');
+                        } else {
 				$this->Session->setFlash(__('The attendee could not be saved. Please, try again.'),'failure');
 			}
 		}
