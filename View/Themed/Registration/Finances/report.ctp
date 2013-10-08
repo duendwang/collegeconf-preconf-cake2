@@ -2,7 +2,7 @@
 	<h2><?php echo __('Finances Report');?></h2>
         <h4 style="font-size: 100%; color:#fff"><?php
         foreach ($conferences as $conference):
-            echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$this->Html->link($conference['Locality']['city'],array('action' => 'index',$locality['Locality']['id'])) . '<br>';
+            echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$this->Html->link($conference['Locality']['name'],array('action' => 'index',$locality['Locality']['id'])) . '<br>';
         endforeach;?></h4>
         <table cellpadding="0" cellspacing="0" class="sortable">
 			<th>Locality</th>
@@ -12,7 +12,7 @@
                         <th>Remaining Balance</th>
 	<?php foreach ($report_entries as $report_entry): ?>
 	<tr>
-      		<td><?php echo $this->Html->link(__($report_entry['Locality']['city']),array('action' => 'index',$report_entry['Finance']['locality_id'])); ?>&nbsp;</td>
+      		<td><?php echo $this->Html->link(__($report_entry['Locality']['name']),array('action' => 'index',$report_entry['Finance']['locality_id'])); ?>&nbsp;</td>
 		<td><?php echo h($report_entry[0]['count']); ?>&nbsp;</td>
                 <td><?php echo h($report_entry[0]['total charge']); ?>&nbsp;</td>
 		<td><?php echo h($report_entry[0]['total payment']); ?>&nbsp;</td>

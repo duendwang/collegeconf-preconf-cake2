@@ -13,12 +13,15 @@
 <?php echo $this->Form->create('Attendee'); ?>
 	<h2><?php echo 'Register for Conference'; ?></h2>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Please check your information and supply any missing information. Any changes made on this form will apply only for this conference.<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;To make any permanent changes, please do so in account preferences.<br><br><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;To make any permanent changes, please do so in <?php echo $this->Html->link('account preferences',array('controller' => 'users','action' => 'edit',$user['id']));?>.<br><br><br>
 	    <center>
                 <?php echo 'Are you a conference contact?&nbsp;',
                         $this->Form->input('conf_contact', array('label' => false, 'div' => false, 'style' => 'float: none')),
+                        '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
+                        'conference-designated nurse?&nbsp;',
+                        $this->Form->input('nurse', array('label' => false, 'type' => 'checkbox','div' => false, 'style' => 'float: none')),
                         '<br><br>';
-                echo 'Which conference are you registering for? ', $this->Form->input('conference_id', array('label' => false, 'div' => false, 'style' => 'float: none'));
+                echo 'Which conference are you registering for? ', $this->Form->input('conference_id', array('label' => false, 'empty' => true, 'default' => null,'div' => false, 'style' => 'float: none'));
                 echo $this->Form->hidden('add', array('label' => false));?><br>
                 If you are registering for both conferences, register for the second conference after you submit this form.<br><br>
                 <?php echo 'Which locality are you registering with?&nbsp;',

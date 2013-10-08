@@ -43,18 +43,23 @@ $cakeDescription = __d('cake_dev', 'College Conference Registration');
 		<div id="header">
                     <table>
                         <tr>
-                            <td><h1><?php echo $this->Html->link($cakeDescription, '/'); ?></h1></td>
+                            <td><h1><?php echo $this->Html->link($cakeDescription, '/',array('style' => 'font-size: 20px')); ?></h1></td>
                             <?php if(isset($user)) {?>
-                            <td align="right" style="text-align:center; font-size:10"><h1><?php
+                            <td align="right" style="text-align:right; font-size:10"><h1><?php
                                 echo 'Hello, ';
-                                    if(strlen($user['first_name']) > 0) {
-                                        echo $user['first_name'], ' ', $user['last_name'];
-                                    } else{
-                                        echo 'church in ', $user['Locality']['name'];
-                                    }
-                                    echo '. (', $this->Html->link('logout', '/users/logout'), ', ';
-                                    echo $this->Html->link('help',$link).')';?>
-                                </h1>
+                                if(strlen($user['first_name']) > 0) {
+                                    echo $user['first_name'], ' ', $user['last_name'];
+                                } else{
+                                    echo 'church in ', $user['Locality']['name'];
+                                }
+                                echo '. (', $this->Html->link('logout', '/users/logout'), ', '.
+                                    $this->Html->link('help',$link).')&emsp;&emsp;<br><br>';
+                                echo $this->Form->create(false,array('url' => array('controller' => 'conferences','action' => 'conference_change'))).
+                                    $this->Form->input('Conference.selected',array('label' => false,'type' => 'select','div' => false,'options' => $conferences,'default' => $selected_conference)).
+                                    $this->Form->submit('Go',array('div' => false,'style' => 'height:27px'));
+                                echo $this->Form->end();
+                                ?>
+                            </h1>
                             </td>
                             <?php }?>
                         </tr>

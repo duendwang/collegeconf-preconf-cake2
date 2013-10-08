@@ -223,7 +223,7 @@ class Attendee extends AppModel {
 		'cell_phone' => array(
 			'phone' => array(
 				'rule' => array('phone',null,'us'),
-				'message' => 'Valid US number',
+				'message' => 'Invalid US phone #',
 				'allowEmpty' => true,
 				'required' => false,
 				//'last' => false, // Stop validation after this rule

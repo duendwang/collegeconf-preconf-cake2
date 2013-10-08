@@ -3,7 +3,7 @@
 	<h4 style="font-size: 130%"><?php echo __('Your Localities');?></h4>
         <h4 style="font-size: 100%; color:#fff"><?php
         foreach ($localities as $locality):
-            echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$this->Html->link($locality['Locality']['city'],array('action' => 'summary',$locality['Locality']['id'])) . '<br>';
+            echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$this->Html->link($locality['Locality']['name'],array('action' => 'summary',$locality['Locality']['id'])) . '<br>';
         endforeach;?></h4>
         <br><?php echo $this->Html->link('View Finance Summary',array('controller' => 'finances','action' => 'summary'));?><br><br>
         <table cellpadding="0" cellspacing="0">
@@ -12,30 +12,33 @@
 			<th><?php echo $this->Paginator->sort('last_name'); ?></th>
 			<th><?php echo $this->Paginator->sort('gender'); ?></th>
 			<th><?php echo $this->Paginator->sort('comment'); ?></th>   
-			<th><?php echo $this->Paginator->sort('add'); ?></th>
+			<th><?php echo $this->Paginator->sort('created'); ?></th>
 			<th><?php echo $this->Paginator->sort('rate'); ?></th>
-                        <th><?php echo $this->Paginator->sort('check_in'); ?></th>
+                        <th><?php echo $this->Paginator->sort('check_in_count'); ?></th>
 			<th><?php echo $this->Paginator->sort('paid_at_conf'); ?></th>
-			<th><?php echo $this->Paginator->sort('cancel'); ?></th>
-			<th><?php echo $this->Paginator->sort('cancel_reason'); ?></th>
+			<th><?php echo $this->Paginator->sort('Cancel.created'); ?></th>
+			<th><?php echo $this->Paginator->sort('Cancel.reason'); ?></th>
 	</tr>
 	<?php
 	if (isset($attendees)) {
-        foreach ($attendees as $attendee): ?>
-	<tr>
+        foreach ($attendees as $attendee): 
+            if ($attendee['Attendee']['cancel_count'] == 1) echo '<tr style="text-decoration:line-through">';
+            else echo '<tr>';?>
 		<td><?php echo h($attendee['Attendee']['first_name']); ?>&nbsp;</td>
 		<td><?php echo h($attendee['Attendee']['last_name']); ?>&nbsp;</td>
 		<td><?php echo h($attendee['Attendee']['gender']); ?>&nbsp;</td>
                 <td><?php echo h($attendee['Attendee']['comment']); ?>&nbsp;</td>
-		<td><?php echo h($attendee['Attendee']['add']); ?>&nbsp;</td>
+		<td><?php echo h($attendee['Attendee']['created']); ?>&nbsp;</td>
 		<td><?php echo h($attendee['Attendee']['rate']); ?>&nbsp;</td>
                 <td>
                     <?php if (isset($attendee['CheckIn'][0])) echo h($attendee['CheckIn'][0]['timestamp']);
                     else echo '';?> &nbsp;
                 </td>
 		<td><?php echo h($attendee['Attendee']['paid_at_conf']); ?>&nbsp;</td>
-		<td><?php echo h($attendee['Attendee']['cancel']); ?>&nbsp;</td>
-		<td><?php echo h($attendee['Attendee']['cancel_reason']); ?>&nbsp;</td>
+		<?php if (isset($attendee['Cancel'])) {?>
+                <td><?php echo h($attendee['Cancel']['created']); ?>&nbsp;</td>
+		<td><?php echo h($attendee['Cancel']['reason']); ?>&nbsp;</td>
+                <?php } ?>
 	</tr>
 <?php endforeach; 
         }?>

@@ -8,6 +8,19 @@ App::uses('AppController', 'Controller');
 class ConferencesController extends AppController {
 
 /**
+ * conferenceChange method
+ * 
+ * @return void
+ */
+
+    public function conference_change() {
+        if ($this->request->is('post')) {
+            $this->Session->write('Conference.selected',$this->request->data['Conference']['selected']);
+            $this->redirect($this->referer());
+        }
+    }
+
+/**
  * index method
  *
  * @return void

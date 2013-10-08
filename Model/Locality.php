@@ -124,6 +124,19 @@ class Locality extends AppModel {
 			'finderQuery' => '',
 			'counterQuery' => ''
 		),
+                'RegistrationTeamsLocality' => array(
+			'className' => 'RegistrationTeamsLocality',
+			'foreignKey' => 'locality_id',
+			'dependent' => false,
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
+		),
 		'User' => array(
 			'className' => 'User',
 			'foreignKey' => 'locality_id',

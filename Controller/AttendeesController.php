@@ -13,22 +13,24 @@ class AttendeesController extends AppController {
  * @return array Returns array of messages except when called from home page,
  *  in which case it returns true/false.
  */
-	function _requirementCheck($locality = null) {
-		if (is_null($locality)) {
+	function _requirementCheck($locality_ids = null) {
+		if (is_null($locality_ids)) {
                     switch ($this->Auth->user('UserType.account_type_id')) {
                         case 1:
                         case 2:
                         case 3:
                             $locality_ids = $this->Attendee->Locality->RegistrationStep->find('list',array('conditions' => array('RegistrationStep.conference_id' => $this->Session->read('Conference.default'),'RegistrationStep.user_id =' => $this->Auth->user('id')),'fields' => 'RegistrationStep.locality_id'));
-                            debug($locality_ids);
                             break;
                         case 4:
-                            $locality_ids[] = $this->Auth->user('locality_id');
+                            $locality_ids = $this->Auth->user('locality_id');
                             break;
                     }
 		}
                 //TODO Test and fix checking requirements for registration team
-                $attendees = $this->Attendee->find('all',array('conditions' => array('Attendee.conference_id' => $this->Session->read('Conference.default'),'Attendee.locality_id' => $locality_ids,'Attendee.cancel_count' => 0),'recursive' => -1));
+                
+                $conferences = $this->Attendee->Conference->find('list',array('conditions' => array('Conference.id' => $this->Attendee->Conference->current_term_conferences(),'Conference.start_date > NOW()'),'fields' => array('Conference.id')));
+                
+                $attendees = $this->Attendee->find('all',array('conditions' => array('Attendee.conference_id' => $conferences,'Attendee.locality_id' => $locality_ids,'Attendee.cancel_count' => 0),'recursive' => -1));
 		foreach ($attendees as $attendee):
                     if(strlen($attendee['Attendee']['gender']) === 0) {$requirement_messages[] = array('Gender information is missing for <a href="'.Router::url(array('controller' => 'attendees','action' => 'edit',$attendee['Attendee']['id']),false).'">'.$attendee['Attendee']['first_name'].' '.$attendee['Attendee']['last_name'].'</a>. Please fill in this information.','warning');}
                     if(strlen($attendee['Attendee']['conference_id']) === 0) {$requirement_messages[] = array('A conference has not been selected for <a href="'.Router::url(array('controller' => 'attendees','action' => 'edit',$attendee['Attendee']['id']),false).'">'.$attendee['Attendee']['first_name'].' '.$attendee['Attendee']['last_name'].'</a>. Please select a conference.','warning');}
@@ -47,25 +49,52 @@ class AttendeesController extends AppController {
                     }
 		endforeach;
                 
-                $sis_count = $this->Attendee->find('count',array('conditions' => array('Attendee.conference_id' => $this->Session->read('Conference.default'),'Attendee.locality_id' => $locality,'Attendee.gender' => 'S')));
-		$sis_cc_count = $this->Attendee->find('count',array('conditions' => array('Attendee.conference_id' => $this->Session->read('Conference.default'),'Attendee.locality_id' => $locality,'Attendee.gender =' => 'S','Attendee.conf_contact' => 1)));
-                $bro_count = $this->Attendee->find('count',array('conditions' => array('Attendee.conference_id' => $this->Session->read('Conference.default'),'Attendee.locality_id' => $locality,'Attendee.gender' => 'B')));
-                $bro_cc_count = $this->Attendee->find('count',array('conditions' => array('Attendee.conference_id' => $this->Session->read('Conference.default'),'Attendee.locality_id' => $locality,'Attendee.gender =' => 'B','Attendee.conf_contact' => 1)));
-                if($sis_count > 0) {
-                    if($sis_cc_count > 1) {$requirement_messages[] = array('More than one sister conference contact is selected. Please select one only.','warning');}
-                    elseif ($sis_cc_count == 0) {$requirement_messages[] = array('No sister conference contact is selected. Please make sure to select a conference contact that can attend the conference full time and has ready access to email.','warning');}
-                }
-                if($bro_count > 0) {
-                    if($bro_cc_count > 1) {$requirement_messages[] = array('More than one brother conference contact is selected. Please select one only.','warning');}
-                    elseif ($bro_cc_count == 0) {$requirement_messages[] = array('No brother conference contact is selected. Please make sure to select a conference contact that can attend the conference full time and has ready access to email.','warning');}
-                }
-                $newone_cc = $this->Attendee->find('count',array('conditions' => array('Attendee.conference_id' => $this->Session->read('Conference.default'),'Attendee.locality_id' => $locality,'Attendee.new_one' => 1,'Attendee.conf_contact' => 1)));
-                if($newone_cc > 0) {$requirement_messages[] = array('A new one was selected as the conference contact. Because of the nature of the conference contact service, please select another conference contact.','warning');}
+                foreach ($conferences as $conference):
+                    $conference = $this->Attendee->Conference->find('first',array(
+                        'conditions' => array('Conference.id' => $conference),
+                        'contain' => array(
+                            'ConferenceLocation'
+                        )
+                    ));
+                    
+                    $sis_count = $this->Attendee->find('count',array('conditions' => array('Attendee.conference_id' => $conference['Conference']['id'],'Attendee.locality_id' => $locality_ids,'Attendee.gender' => 'S')));
+                    $sis_cc_count = $this->Attendee->find('count',array('conditions' => array('Attendee.conference_id' => $conference['Conference']['id'],'Attendee.locality_id' => $locality_ids,'Attendee.gender =' => 'S','Attendee.conf_contact' => 1)));
+                    $bro_count = $this->Attendee->find('count',array('conditions' => array('Attendee.conference_id' => $conference['Conference']['id'],'Attendee.locality_id' => $locality_ids,'Attendee.gender' => 'B')));
+                    $bro_cc_count = $this->Attendee->find('count',array('conditions' => array('Attendee.conference_id' => $conference['Conference']['id'],'Attendee.locality_id' => $locality_ids,'Attendee.gender =' => 'B','Attendee.conf_contact' => 1)));
+                    if($sis_count > 0) {
+                        if($sis_cc_count > 1) {$requirement_messages[] = array('More than one sister conference contact is selected. Please select one only.','warning');}
+                        elseif ($sis_cc_count == 0) {$requirement_messages[] = array('No sister conference contact is selected. Please make sure to select a conference contact that can attend the conference full time and has ready access to email.','warning');}
+                    }
+                    if($bro_count > 0) {
+                        if($bro_cc_count > 1) {$requirement_messages[] = array('More than one brother conference contact is selected. Please select one only.','warning');}
+                        elseif ($bro_cc_count == 0) {$requirement_messages[] = array('No brother conference contact is selected. Please make sure to select a conference contact that can attend the conference full time and has ready access to email.','warning');}
+                    }
+                    //Can be moved outside conference foreach
+                    $newone_cc = $this->Attendee->find('count',array('conditions' => array('Attendee.conference_id' => $conference['Conference']['id'],'Attendee.locality_id' => $locality_ids,'Attendee.new_one' => 1,'Attendee.conf_contact' => 1)));
+                    if($newone_cc > 0) {$requirement_messages[] = array('A new one was selected as the conference contact. Because of the nature of the conference contact service, please select another conference contact.','warning');}
                 
-                //Used during Big Bear
-                $others_count = $this->Attendee->find('count',array('conditions' => array('Attendee.conference_id' => $this->Session->read('Conference.default'),'Attendee.locality_id' => $locality,'Attendee.status_id NOT' => array(1,2,3,4,5))));
-                $students_count = $this->Attendee->find('count',array('conditions' => array('Attendee.conference_id' => $this->Session->read('Conference.default'),'Attendee.locality_id' => $locality,'Attendee.status_id' => array(1,2,3,4,5))));
-                if($others_count > $students_count/2) {$requirement_messages[] = array('Your student to non-student ratio is less than 2:1. Please fellowship with the registration team if there is a particular need.','warning');}
+                    if ($conference['ConferenceLocation']['id'] == 1) {
+                        //Used during Big Bear
+                        $others_count = $this->Attendee->find('count',array('conditions' => array('Attendee.conference_id' => $conference['Conference']['id'],'Attendee.locality_id' => $locality_ids,'Attendee.status_id NOT' => array(1,2,3,4,5))));
+                        $students_count = $this->Attendee->find('count',array('conditions' => array('Attendee.conference_id' => $conference['Conference']['id'],'Attendee.locality_id' => $locality_ids,'Attendee.status_id' => array(1,2,3,4,5))));
+                        if($others_count > $students_count/2) {$requirement_messages[] = array('Your student to non-student ratio is less than 2:1. Please fellowship with the registration team if there is a particular need.','warning');}
+                        
+                        //Checks if 1)any groups are mixed gender and 2)if any groups are too large
+                        $hosp_groups = $this->Attendee->find('all',array('conditions' => array('Attendee.conference_id' => $conference['Conference']['id'],'Attendee.locality_id' => $locality_ids,'NOT' => array('Attendee.group' => array('','OWN'))),'group' => array('Attendee.group','Attendee.gender'),'fields' => array('Attendee.group','Attendee.gender','count(`Attendee`.`id`) as count'),'recursive' => -1));
+                        foreach ($hosp_groups as $hosp_group):
+                            if ($hosp_group['Attendee']['gender'] == 'B') {
+                                if ($this->Attendee->find('count',array('conditions' => array('Attendee.conference_id' => $conference['Conference']['id'],'Attendee.locality_id' => $locality_ids,'Attendee.group' => $hosp_group['Attendee']['group']),))) {
+                                    $requirement_messages[] = array('Both brothers and sisters are assigned to the hospitality group '.h($hosp_group['Attendee']['group']).'. Please only assign either brothers or sisters to this group and move to the rest to another group.','warning');
+                                }
+                                if ($hosp_group[0]['count'] > 10) {
+                                    $requirement_messages[] = array('Too many brothers are assigned to hospitality group '.h($hosp_group['Attendee']['group']).'. Please only assign a maximum of 10 brothers to each hospitality group.','warning');
+                                }
+                            } elseif ($hosp_group['Attendee']['gender'] == 'S' && $hosp_group[0]['count'] > 4) {
+                                $requirement_messages[] = array('Too many sisters are assigned to hospitality group '.h($hosp_group['Attendee']['group']).'. Please only assign a maximum of 4 sisters to each hospitality group.','warning');
+                            }
+                        endforeach;
+                    }
+                endforeach;
                 
                 if (!empty($requirement_messages)) {
                     if ($this->request['controller'] == 'attendees' && $this->request['action'] == 'index') {
@@ -107,7 +136,7 @@ class AttendeesController extends AppController {
  * @return void
  */
 	public function summary($locality = null) {
-		$this->Attendee->recursive = 1;
+		$this->Attendee->recursive = 0;
                 $contain = array_merge($this->Attendee->contain,array(
                     'AttendeeFinanceAdd' => array(
                         'fields' => array(
@@ -119,28 +148,37 @@ class AttendeesController extends AppController {
                     )
                 ));
                 
+                $conference_dates = $this->Attendee->Conference->conference_dates($this->Session->read('Conference.selected'));
+                
                 if($this->Auth->user('UserType.account_type_id') == 4) {
-                    $conference_dates = $this->Attendee->Conference->conference_dates($this->Session->read('Conference.selected'));
                     $this->paginate = array( 
-                        'conditions' => array('Attendee.conference_id' => $this->Session->read('Conference.selected'),'Attendee.locality_id =' => $this->Auth->user('locality_id'), 'OR' => array('Attendee.cancel_count' => 0, 'Cancel.created >' => date('Y-m-d',$conference_dates['first_deadline']))),
+                        'conditions' => array('Attendee.conference_id' => $this->Session->read('Conference.selected'),'Attendee.locality_id ' => $this->Auth->user('locality_id'), 'OR' => array('Attendee.cancel_count' => 0, 'Cancel.created >' => date('Y-m-d',strtotime($conference_dates['first_deadline'])))),
                         'contain' => $contain,
                         'limit' => 200,
                         );
 		} else {
-                    $locality_ids = $this->Attendee->Locality->RegistrationStep->find('list',array('conditions' => array('RegistrationStep.conference_id' => '3','RegistrationStep.user_id =' => $this->Auth->user('id')),'fields' => 'RegistrationStep.locality_id'));
-                    $this->set('localities',$this->Attendee->Locality->find('all',array('conditions' => array('Locality.id' => $locality_ids, ),'recursive' => 0,'order' => 'Locality.name')));
+                    $locality_ids = $this->Attendee->Locality->RegistrationStep->find('list',array('conditions' => array('RegistrationStep.conference_id' => $this->Session->read('Conference.selected'),'RegistrationStep.user_id =' => $this->Auth->user('id')),'fields' => 'RegistrationStep.locality_id'));
+                    $this->set('localities',$this->Attendee->Locality->find('all',array('conditions' => array('Locality.id' => $locality_ids),'recursive' => 0,'order' => 'Locality.name')));
                     if(isset($locality)) {
                         $this->paginate = array(
-                            'conditions' => array('Attendee.conference_id' => $this->Session->read('Conference.selected'),'Attendee.locality_id =' => $locality, 'OR' => array('Attendee.cancel_count' => 0, 'Cancel.created >' => date('Y-m-d',$conference_dates['first_deadline']))),
+                            'conditions' => array('Attendee.conference_id' => $this->Session->read('Conference.selected'),'Attendee.locality_id =' => $locality, 'OR' => array('Attendee.cancel_count' => 0, 'Cancel.created >' => date('Y-m-d',strtotime($conference_dates['first_deadline'])))),
                             'contain' => $contain,
                             'limit' => 100,
+                            );
+                    } else {
+                        $this->paginate = array(
+                            'conditions' => array('Attendee.conference_id' => $this->Session->read('Conference.selected'),'Attendee.locality_id ' => $locality_ids, 'OR' => array('Attendee.cancel_count' => 0, 'Cancel.created >' => date('Y-m-d',strtotime($conference_dates['first_deadline'])))),
+                            'contain' => $contain,
+                            'limit' => 200,
                             );
                     }
                 }
                 $attendees = $this->paginate();
                 foreach($attendees as &$attendee):
                     $attendee['Attendee']['created'] = date('m/d/Y',strtotime($attendee['Attendee']['created']));
-                    $attendee['Cancel']['created'] = date('m/d/Y',strtotime($attendee['Cancel']['created']));
+                    if (!empty($attendee['Cancel']['created'])) {
+                        $attendee['Cancel']['created'] = date('m/d/Y',strtotime($attendee['Cancel']['created']));
+                    }
                     if (!empty($attendee['Cancel']['replaced'])) {
                         $attendee['Cancel']['reason'] = $attendee['Cancel']['reason'].'; Replaced by '.$attendee['Cancel']['replaced'];
                     }
@@ -156,6 +194,16 @@ class AttendeesController extends AppController {
                 endforeach;
                 $this->set(compact('attendees'));
 	}
+
+/**
+ * report method
+ * 
+ * @return void
+ */
+        public function report() {
+            $this->Attendee->recursive = 0;
+            
+        }
 
 /**
  * process method
@@ -207,7 +255,7 @@ class AttendeesController extends AppController {
 		if ($this->request->is('post')) {
 			$this->Attendee->create();
                         //Adds other allergy information to comments
-                        if ($this->request->data['Attendee']['other_allergies']) {
+                        if (!empty($this->request->data['Attendee']['other_allergies']) && strpos($this->request->data['Attendee']['comment'],'Other Allergies:') === false) {
                             $this->request->data['Attendee']['comment'] = 'Other Allergies: '.str_replace(';',',',$this->request->data['Attendee']['other_allergies']).'; '.$this->request->data['Attendee']['comment'];
                         }
                         //Changes first and last names to correct case
@@ -327,29 +375,22 @@ class AttendeesController extends AppController {
                             //Adjust added attendee's rate
                             $this->request->data['Attendee']['rate'] = $matched_replacement['CancelAttendee']['rate'];
                             
-                            //Create replacement finance
-                            $this->Attendee->AttendeeFinanceCancel->Finance->create($finance = array(
-                                'conference_id' => $this->request->data['Attendee']['conference_id'],
-                                'receive_date' => date('Y-m-d',strtotime('now')),
-                                'locality_id' => $this->request->data['Attendee']['locality_id'],
-                                'finance_type_id' => 5,
-                                'count' => '0',
-                                'rate' => '0',
-                                'charge' => null,
-                                'payment' => null,
-                                'balance' => null,
-                                'comment' => null
-                            ));
-                            $this->Attendee->AttendeeFinanceCancel->Finance->save($finance);
-                            $finance_id = $this->Attendee->AttendeeFinanceCancel->Finance->id;
-                            
-                            //Decrease count of original cancellation finance
-                            $this->Attendee->AttendeeFinanceCancel->Finance->id = $matched_replacement['Finance']['id'];
-                            $this->Attendee->AttendeeFinanceCancel->Finance->saveField('Finance.count',$this->Attendee->AttendeeFinanceCancel->Finance->field('count') - 1);
-                            
-                            //Modify Cancel record accordingly
-                            $this->Attendee->Cancel->id = $matched_replacement['CancelAttendee']['Cancel']['id'];
-                            $this->Attendee->Cancel->saveField('replaced',$this->request->data['Attendee']['first_name'].' '.$this->request->data['Attendee']['last_name']);                            
+                            //Create replacement finance and modify original cancel AttendeeFinance to reflect replacement
+                            $this->request->data['AttendeeFinanceAdd'][0] = array(
+                                'id' => $matched_replacement['AttendeeFinanceCancel']['id'],
+                                'Finance' => array(
+                                    'conference_id' => $this->request->data['Attendee']['conference_id'],
+                                    'receive_date' => date('Y-m-d',strtotime('now')),
+                                    'locality_id' => $this->request->data['Attendee']['locality_id'],
+                                    'finance_type_id' => 5,
+                                    'count' => '0',
+                                    'rate' => '0',
+                                    'charge' => null,
+                                    'payment' => null,
+                                    'balance' => null,
+                                    'comment' => null,
+                                    )
+                            );
                         } else {
                             //If there is no matched replacement possible
                             //Check for existing finances entries for same kind of transaction
@@ -367,65 +408,57 @@ class AttendeesController extends AppController {
                             
                             //If existing finance entry found, update entry with new count.
                             if (count($existing_finances) >= 1) {
-                                $finance_id = $existing_finances[0]['Finance']['id'];
-                                $this->Attendee->AttendeeFinanceAdd->Finance->id = $existing_finances[0]['Finance']['id'];
-                                $this->Attendee->AttendeeFinanceAdd->Finance->read(
-                                        array(
-                                            'Finance.id',
-                                            'Finance.conference_id',
-                                            'Finance.receive_date',
-                                            'Finance.locality_id',
-                                            'Finance.finance_type_id',
-                                            'Finance.count',
-                                            'Finance.rate',
-                                            'Finance.charge',
-                                            'Finance.payment',
-                                            'Finance.balance',
-                                        ));
-                                $this->Attendee->AttendeeFinanceAdd->Finance->set(
-                                        array(
-                                            'receive_date' => date('Y-m-d',strtotime('now')),
-                                            'count' => $existing_finances[0]['Finance']['count'] + 1,
-                                            'charge' => null,
-                                            'balance' => '0.00',
-                                    ));
-                                $this->Attendee->AttendeeFinanceAdd->Finance->save();
+                                $this->request->data['AttendeeFinanceAdd'][0] = array(
+                                    'finance_id' => $existing_finances[0]['Finance']['id'],
+                                    'Finance' => array(
+                                        'id' => $existing_finances[0]['Finance']['id'],
+                                        'receive_date' => date('Y-m-d',strtotime('now')),
+                                        'finance_type_id' => $existing_finances[0]['Finance']['finance_type_id'],
+                                        'conference_id' => $existing_finances[0]['Finance']['conference_id'],
+                                        'locality_id' => $existing_finances[0]['Finance']['locality_id'],
+                                        'count' => $existing_finances[0]['Finance']['count'] + 1,
+                                        'rate' => $existing_finances[0]['Finance']['rate'],
+                                        'charge' => null,
+                                        'payment' => $existing_finances[0]['Finance']['payment'],
+                                        'balance' => '0.00',
+                                    )
+                                );
                             } else {
                                 //Otherwise add new finance entry for this transaction
-                                $this->Attendee->AttendeeFinanceAdd->Finance->create($finance = array(
-                                    'conference_id' => $this->request->data['Attendee']['conference_id'],
-                                    'receive_date' => date('Y-m-d',strtotime('now')),
-                                    'locality_id' => $this->request->data['Attendee']['locality_id'],
-                                    'finance_type_id' => $finance_type,
-                                    'count' => 1,
-                                    'rate' => $this->request->data['Attendee']['rate'],
-                                    'charge' => '',
-                                    'payment' => '',
-                                    'balance' => '0.00',
-                                    'comment' => $finance_comment,
+                                $this->request->data['AttendeeFinanceAdd'][0] = array(
+                                    'Finance' => array(
+                                        'conference_id' => $this->request->data['Attendee']['conference_id'],
+                                        'receive_date' => date('Y-m-d',strtotime('now')),
+                                        'locality_id' => $this->request->data['Attendee']['locality_id'],
+                                        'finance_type_id' => $finance_type,
+                                        'count' => 1,
+                                        'rate' => $this->request->data['Attendee']['rate'],
+                                        'charge' => '',
+                                        'payment' => '',
+                                        'balance' => '0.00',
+                                        'comment' => $finance_comment,
                                 ));
-                                $this->Attendee->AttendeeFinanceAdd->Finance->save($finance);
-                                $finance_id = $this->Attendee->AttendeeFinanceAdd->Finance->id;
                             }
                         }
                         
                         //TODO change to save all 3 models at one time to prevent partial saves
-                        if ($this->Attendee->save($this->request->data)) {
-				//Save Attendee Finance association
-                                $attendees_finance = array(
-                                    'finance_id' => $finance_id,
-                                    'add_attendee_id' => $this->Attendee->id,
-                                );
-                                
+                        if ($this->Attendee->saveAssociated($this->request->data,array('validate' => true,'deep' => true))) {
                                 if (isset($matched_replacement)) {
-                                    //Modify cancellation attendees_finances record to reflect replacement
-                                    $this->Attendee->AttendeeFinanceCancel->id = $matched_replacement['AttendeeFinanceCancel']['id'];
-                                    $this->Attendee->AttendeeFinanceCancel->save($attendees_finance);
-                                } else {
-                                    $this->Attendee->AttendeeFinanceAdd->create($attendees_finance);
-                                    $this->Attendee->AttendeeFinanceAdd->save($attendees_finance);
+                                    //Decrease count of original cancellation finance
+                                    $this->Attendee->AttendeeFinanceCancel->Finance->id = $matched_replacement['Finance']['id'];
+                                    $this->Attendee->AttendeeFinanceCancel->Finance->save(array(
+                                        'count',$this->Attendee->AttendeeFinanceCancel->Finance->field('count') - 1,
+                                        'rate' => $matched_replacement['Finance']['rate'],
+                                        'charge' => null,
+                                        'payment' => $matched_replacement['Finance']['payment'],
+                                        'balance' => null,
+                                        ));
+                                    
+                                    //Modify Cancel record accordingly
+                                    $this->Attendee->Cancel->id = $matched_replacement['CancelAttendee']['Cancel']['id'];
+                                    $this->Attendee->Cancel->saveField('replaced',$this->request->data['Attendee']['first_name'].' '.$this->request->data['Attendee']['last_name']);                            
                                 }
-
+                                
                                 $this->Session->setFlash(__('The attendee has been saved'),'success');
                                 if (isset($this->request->data['submit'])) {
                                     //$this->Session->delete('Attendee');
@@ -449,7 +482,7 @@ class AttendeesController extends AppController {
 		}
                 $conferences = $this->Attendee->Conference->find('list',array('conditions' => array('Conference.id' => $this->Attendee->Conference->current_term_conferences())));
 		$locality = $this->Auth->user('locality_id');
-                $locality_ids = $this->Attendee->Locality->RegistrationStep->find('list',array('conditions' => array('RegistrationStep.conference_id' => $this->Session->read('Conference.default'),'RegistrationStep.user_id =' => $this->Auth->user('id')),'fields' => 'RegistrationStep.locality_id'));
+                $locality_ids = array_merge(array(1, 2, 3),$this->Attendee->Locality->RegistrationStep->find('list',array('conditions' => array('RegistrationStep.conference_id' => $this->Session->read('Conference.default'),'RegistrationStep.user_id =' => $this->Auth->user('id')),'fields' => 'RegistrationStep.locality_id')));
                 if (in_array($this->Auth->user('UserType.account_type_id'),array(2, 3))) {
                     $localities = $this->Attendee->Locality->find('list', array('conditions' => array('Locality.id' => $locality_ids)));
                 } elseif ($this->Auth->user('UserType.account_type_id') == 4) {
@@ -476,8 +509,8 @@ class AttendeesController extends AppController {
 	public function register() {
 		if ($this->request->is('post')) {
 			$this->Attendee->create();
-                        if ($this->request->data['Attendee']['other_allergies']) {
-                            $this->request->data['Attendee']['comment'] = 'Other Allergies: '.$this->request->data['Attendee']['other_allergies'].';'.$this->request->data['Attendee']['comment'];
+                        if (!empty($this->request->data['Attendee']['other_allergies']) && strpos($this->request->data['Attendee']['comment'],'Other Allergies:') === false) {
+                            $this->request->data['Attendee']['comment'] = 'Other Allergies: '.str_replace(';',',',$this->request->data['Attendee']['other_allergies']).'; '.$this->request->data['Attendee']['comment'];
                         }
                         
                         //Changes first and last names to correct case
@@ -596,29 +629,22 @@ class AttendeesController extends AppController {
                             //Adjust added attendee's rate
                             $this->request->data['Attendee']['rate'] = $matched_replacement['CancelAttendee']['rate'];
                             
-                            //Create replacement finance
-                            $this->Attendee->AttendeeFinanceCancel->Finance->create($finance = array(
-                                'conference_id' => $this->request->data['Attendee']['conference_id'],
-                                'receive_date' => date('Y-m-d',strtotime('now')),
-                                'locality_id' => $this->request->data['Attendee']['locality_id'],
-                                'finance_type_id' => 5,
-                                'count' => '0',
-                                'rate' => '0',
-                                'charge' => null,
-                                'payment' => null,
-                                'balance' => null,
-                                'comment' => null
-                            ));
-                            $this->Attendee->AttendeeFinanceCancel->Finance->save($finance);
-                            $finance_id = $this->Attendee->AttendeeFinanceCancel->Finance->id;
-                            
-                            //Decrease count of original cancellation finance
-                            $this->Attendee->AttendeeFinanceCancel->Finance->id = $matched_replacement['Finance']['id'];
-                            $this->Attendee->AttendeeFinanceCancel->Finance->saveField('Finance.count',$this->Attendee->AttendeeFinanceCancel->Finance->field('count') - 1);
-                            
-                            //Modify Cancel record accordingly
-                            $this->Attendee->Cancel->id = $matched_replacement['CancelAttendee']['Cancel']['id'];
-                            $this->Attendee->Cancel->saveField('replaced',$this->request->data['Attendee']['first_name'].' '.$this->request->data['Attendee']['last_name']);                            
+                            //Create replacement finance and modify original cancel AttendeeFinance to reflect replacement
+                            $this->request->data['AttendeeFinanceAdd'][0] = array(
+                                'id' => $matched_replacement['AttendeeFinanceCancel']['id'],
+                                'Finance' => array(
+                                    'conference_id' => $this->request->data['Attendee']['conference_id'],
+                                    'receive_date' => date('Y-m-d',strtotime('now')),
+                                    'locality_id' => $this->request->data['Attendee']['locality_id'],
+                                    'finance_type_id' => 5,
+                                    'count' => '0',
+                                    'rate' => '0',
+                                    'charge' => null,
+                                    'payment' => null,
+                                    'balance' => null,
+                                    'comment' => null,
+                                    )
+                            );
                         } else {
                             //If there is no matched replacement possible
                             //Check for existing finances entries for same kind of transaction
@@ -636,67 +662,61 @@ class AttendeesController extends AppController {
                             
                             //If existing finance entry found, update entry with new count.
                             if (count($existing_finances) >= 1) {
-                                $finance_id = $existing_finances[0]['Finance']['id'];
-                                $this->Attendee->AttendeeFinanceAdd->Finance->id = $existing_finances[0]['Finance']['id'];
-                                $this->Attendee->AttendeeFinanceAdd->Finance->read(
-                                        array(
-                                            'Finance.id',
-                                            'Finance.conference_id',
-                                            'Finance.receive_date',
-                                            'Finance.locality_id',
-                                            'Finance.finance_type_id',
-                                            'Finance.count',
-                                            'Finance.rate',
-                                            'Finance.charge',
-                                            'Finance.payment',
-                                            'Finance.balance',
-                                        ));
-                                $this->Attendee->AttendeeFinanceAdd->Finance->set(
-                                        array(
-                                            'receive_date' => date('Y-m-d',strtotime('now')),
-                                            'count' => $existing_finances[0]['Finance']['count'] + 1,
-                                            'charge' => null,
-                                            'balance' => '0.00',
-                                    ));
-                                $this->Attendee->AttendeeFinanceAdd->Finance->save();
+                                $this->request->data['AttendeeFinanceAdd'][0] = array(
+                                    'finance_id' => $existing_finances[0]['Finance']['id'],
+                                    'Finance' => array(
+                                        'id' => $existing_finances[0]['Finance']['id'],
+                                        'receive_date' => date('Y-m-d',strtotime('now')),
+                                        'finance_type_id' => $existing_finances[0]['Finance']['finance_type_id'],
+                                        'conference_id' => $existing_finances[0]['Finance']['conference_id'],
+                                        'locality_id' => $existing_finances[0]['Finance']['locality_id'],
+                                        'count' => $existing_finances[0]['Finance']['count'] + 1,
+                                        'rate' => $existing_finances[0]['Finance']['rate'],
+                                        'charge' => null,
+                                        'payment' => $existing_finances[0]['Finance']['payment'],
+                                        'balance' => '0.00',
+                                ));
                             } else {
                                 //Otherwise add new finance entry for this transaction
-                                $this->Attendee->AttendeeFinanceAdd->Finance->create($finance = array(
-                                    'conference_id' => $this->request->data['Attendee']['conference_id'],
-                                    'receive_date' => date('Y-m-d',strtotime('now')),
-                                    'locality_id' => $this->request->data['Attendee']['locality_id'],
-                                    'finance_type_id' => $finance_type,
-                                    'count' => 1,
-                                    'rate' => $this->request->data['Attendee']['rate'],
-                                    'charge' => '',
-                                    'payment' => '',
-                                    'balance' => '0.00',
-                                    'comment' => $finance_comment,
+                                $this->request->data['AttendeeFinanceAdd'][0] = array(
+                                    'Finance' => array(
+                                        'conference_id' => $this->request->data['Attendee']['conference_id'],
+                                        'receive_date' => date('Y-m-d',strtotime('now')),
+                                        'locality_id' => $this->request->data['Attendee']['locality_id'],
+                                        'finance_type_id' => $finance_type,
+                                        'count' => 1,
+                                        'rate' => $this->request->data['Attendee']['rate'],
+                                        'charge' => '',
+                                        'payment' => '',
+                                        'balance' => '0.00',
+                                        'comment' => $finance_comment,
                                 ));
-                                $this->Attendee->AttendeeFinanceAdd->Finance->save($finance);
-                                $finance_id = $this->Attendee->AttendeeFinanceAdd->Finance->id;
                             }
                         }
                         
                         //TODO change to save all 3 models at one time to prevent partial saves
-                        if ($this->Attendee->save($this->request->data)) {
-				//Save Attendee Finance association
-                                $attendees_finance = array(
-                                    'finance_id' => $finance_id,
-                                    'add_attendee_id' => $this->Attendee->id,
-                                );
-                                
+                        if ($this->Attendee->saveAssociated($this->request->data,array('validate' => true,'deep' => true))) {
                                 if (isset($matched_replacement)) {
-                                    //Modify cancellation attendees_finances record to reflect replacement
-                                    $this->Attendee->AttendeeFinanceCancel->id = $matched_replacement['AttendeeFinanceCancel']['id'];
-                                    $this->Attendee->AttendeeFinanceCancel->save($attendees_finance);
-                                } else {
-                                    $this->Attendee->AttendeeFinanceAdd->create($attendees_finance);
-                                    $this->Attendee->AttendeeFinanceAdd->save($attendees_finance);
+                                    //Decrease count of original cancellation finance
+                                    $this->Attendee->AttendeeFinanceCancel->Finance->id = $matched_replacement['Finance']['id'];
+                                    $this->Attendee->AttendeeFinanceCancel->Finance->save(array(
+                                        'count',$this->Attendee->AttendeeFinanceCancel->Finance->field('count') - 1,
+                                        'rate' => $matched_replacement['Finance']['rate'],
+                                        'charge' => null,
+                                        'payment' => $matched_replacement['Finance']['payment'],
+                                        'balance' => null,
+                                        ));
+                                    
+                                    //Modify Cancel record accordingly
+                                    $this->Attendee->Cancel->id = $matched_replacement['CancelAttendee']['Cancel']['id'];
+                                    $this->Attendee->Cancel->saveField('replaced',$this->request->data['Attendee']['first_name'].' '.$this->request->data['Attendee']['last_name']);                            
                                 }
-				$this->Session->setFlash(__('You have been registered.'),'success');
+                                
+                                $this->Session->setFlash(__('You have been registered.'),'success');
 				$this->redirect(array('controller' => 'pages', 'action' => 'display','home'));
-			} else {
+			} elseif (empty($this->request->data['Attendee']['conference_id'])) {
+                                $this->Session->setFlash(__('A conference was not selected. Please select a conference.'),'failure');
+                        } else {
 				$this->Session->setFlash(__('You could not be registered. Please, try again.'),'failure');
 			}
 		}
@@ -705,7 +725,7 @@ class AttendeesController extends AppController {
                 $localities = $this->Attendee->Locality->find('list', array('conditions' => array('Locality.id' => array(2,$this->Auth->user('Locality.id')))));
                 $campuses = $this->Attendee->Campus->find('list');
 		$statuses = $this->Attendee->Status->find('list', array('conditions' => array('Status.id >' => 1), 'order' => 'Status.id'));
-		$lodgings = $this->Attendee->Lodging->find('list');
+		//$lodgings = $this->Attendee->Lodging->find('list');
 		$this->set(compact('user','conferences', 'localities', 'campuses', 'statuses', 'lodgings'));
 	}
 
@@ -723,20 +743,8 @@ class AttendeesController extends AppController {
 
                 if ($this->request->is('post') || $this->request->is('put')) {
                         //Updates other allergy information to comments
-                        if ($this->request->data['Attendee']['other_allergies']) {
-                            if (strpos($this->request->data['Attendee']['comment'],'Other Allergies:') !== false) {
-                                $comment = explode($this->request->data['Attendee']['comment']);
-                                foreach ($comment as $k => $v):
-                                    if (strpos($v,'Other Allergies:') !== false) {
-                                        //Removes old other allergies information
-                                        unset($comment[$k]);
-                                        break;
-                                    }
-                                endforeach;
-                                $this->request->data['Attendee']['comment'] = 'Other Allergies: '.str_replace(';',',',$this->request->data['Attendee']['other_allergies']).'; '.implode(';',$comment);
-                            } else {
-                                $this->request->data['Attendee']['comment'] = 'Other Allergies: '.$this->request->data['Attendee']['other_allergies'].'; '.$this->request->data['Attendee']['comment'];
-                            }
+                        if (!empty($this->request->data['Attendee']['other_allergies']) && strpos($this->request->data['Attendee']['comment'],'Other Allergies:') === false) {
+                            $this->request->data['Attendee']['comment'] = 'Other Allergies: '.str_replace(';',',',$this->request->data['Attendee']['other_allergies']).'; '.$this->request->data['Attendee']['comment'];
                         }
                         
                         //changes first and last names to correct case
@@ -798,11 +806,9 @@ class AttendeesController extends AppController {
                         $attendee_finance = $this->Attendee->AttendeeFinanceAdd->find('first',array('conditions' => array('AttendeeFinanceAdd.add_attendee_id' => $this->request->data['Attendee']['id']),'recursive' => -1));
                         $this->Attendee->AttendeeFinanceAdd->read(null,$attendee_finance['AttendeeFinanceAdd']['id']);
                         $original_finance = $this->Attendee->AttendeeFinanceAdd->Finance->find('first',array('conditions' => array('Finance.id' => $attendee_finance['AttendeeFinanceAdd']['finance_id']),'recursive' => -1));
+                        //TODO account for finances that are replacements and/or rate changes and make rate change finance if pre-registered attendee changes rate after first deadline
                         if ($this->request->data['Attendee']['rate'] !== $original_finance['Finance']['rate']) {
-                            //Decrease old finance count by 1
-                            $this->Attendee->AttendeeFinanceAdd->Finance->read(null,$original_finance['Finance']['id']);
-                            //$this->Attendee->AttendeeFinanceAdd->Finance->set('count', $original_finance['Finance']['count'] - 1);
-                            $this->Attendee->AttendeeFinanceAdd->Finance->saveField('count', $original_finance['Finance']['count'] - 1);
+                            $change_finance = 1;
                             
                             //Remove nurse comment from attendee if applicable
                             if (strpos($original_finance['Finance']['comment'],'Nurse') !== false && $new_registration_type !== 'Nurse') {
@@ -830,51 +836,51 @@ class AttendeesController extends AppController {
                         
                             //If existing finance entry found, update entry with new count.
                             if (count($existing_finances) >= 1) {
-                                $finance_id = $existing_finances[0]['Finance']['id'];
-                                $this->Attendee->AttendeeFinanceAdd->Finance->id = $existing_finances[0]['Finance']['id'];
-                                $this->Attendee->AttendeeFinanceAdd->Finance->read(
-                                        array(
-                                            'Finance.id',
-                                            'Finance.conference_id',
-                                            'Finance.receive_date',
-                                            'Finance.locality_id',
-                                            'Finance.finance_type_id',
-                                            'Finance.count',
-                                            'Finance.rate',
-                                            'Finance.charge',
-                                            'Finance.payment',
-                                            'Finance.balance',
-                                        ));
-                                $this->Attendee->AttendeeFinanceAdd->Finance->set(
-                                        array(
-                                            'receive_date' => date('Y-m-d',strtotime('now')),
-                                            'count' => $existing_finances[0]['Finance']['count'] + 1,
-                                            'charge' => null,
-                                            'balance' => '0.00',
-                                        ));
-                                $this->Attendee->AttendeeFinanceAdd->Finance->save();
+                                $this->request->data['AttendeeFinanceAdd'][0] = array(
+                                    'finance_id' => $existing_finances[0]['Finance']['id'],
+                                    'Finance' => array(
+                                        'id' => $existing_finances[0]['Finance']['id'],
+                                        'receive_date' => date('Y-m-d',strtotime('now')),
+                                        'finance_type_id' => $existing_finances[0]['Finance']['finance_type_id'],
+                                        'conference_id' => $existing_finances[0]['Finance']['conference_id'],
+                                        'locality_id' => $existing_finances[0]['Finance']['locality_id'],
+                                        'count' => $existing_finances[0]['Finance']['count'] + 1,
+                                        'rate' => $existing_finances[0]['Finance']['rate'],
+                                        'charge' => null,
+                                        'payment' => $existing_finances[0]['Finance']['payment'],
+                                        'balance' => '0.00',
+                                    )
+                                );
                             } else {
                                 //Otherwise add new finance entry for this transaction
-                                $this->Attendee->AttendeeFinanceAdd->Finance->create($finance = array(
-                                    'conference_id' => $this->request->data['Attendee']['conference_id'],
-                                    'receive_date' => date('Y-m-d',strtotime('now')),
-                                    'locality_id' => $this->request->data['Attendee']['locality_id'],
-                                    'finance_type_id' => $finance_type,
-                                    'count' => 1,
-                                    'rate' => $this->request->data['Attendee']['rate'],
-                                    'charge' => '',
-                                    'payment' => '',
-                                    'balance' => '0.00',
-                                    'comment' => $finance_comment,
+                                $this->request->data['AttendeeFinanceAdd'][0] = array(
+                                    'Finance' => array(
+                                        'conference_id' => $this->request->data['Attendee']['conference_id'],
+                                        'receive_date' => date('Y-m-d',strtotime('now')),
+                                        'locality_id' => $this->request->data['Attendee']['locality_id'],
+                                        'finance_type_id' => $finance_type,
+                                        'count' => 1,
+                                        'rate' => $this->request->data['Attendee']['rate'],
+                                        'charge' => '',
+                                        'payment' => '',
+                                        'balance' => '0.00',
+                                        'comment' => $finance_comment,
                                 ));
-                                $this->Attendee->AttendeeFinanceAdd->Finance->save($finance);
-                                $finance_id = $this->Attendee->AttendeeFinanceAdd->Finance->id;
                             }
-                            $this->Attendee->AttendeeFinanceAdd->set('finance_id',$finance_id);
-                            $this->Attendee->AttendeeFinanceAdd->save();
                         }
 			
-                        if ($this->Attendee->save($this->request->data)) {
+                        if ($this->Attendee->saveAssociated($this->request->data,array('validate' => true,'deep' => true))) {
+                                if ($change_finance == 1) {
+                                    $this->Attendee->AttendeeFinanceAdd->Finance->id = $original_finance['Finance']['id'];
+                                    $this->Attendee->AttendeeFinanceAdd->Finance->save(array(
+                                        'count' => $original_finance['Finance']['count'] - 1,
+                                        'rate' => $original_finance['Finance']['rate'],
+                                        'charge' => null,
+                                        'payment' => $original_finance['Finance']['payment'],
+                                        'balance' => null,
+                                    ));
+                                }
+                                
 				//$this->_flash(__('The attendee has been saved',true),'success');
                                 $this->Session->setFlash(__('The attendee has been saved'),'success');
 				if (in_array($this->Auth->user('UserType.account_type_id'),array('2','3'))) {
@@ -887,6 +893,21 @@ class AttendeesController extends AppController {
 		} else {
 			$options = array('conditions' => array('Attendee.' . $this->Attendee->primaryKey => $id));
 			$this->request->data = $this->Attendee->find('first', $options);
+                        
+                        //Move other allergies information to other allergies field
+                        if (strpos($this->request->data['Attendee']['comment'],'Other Allergies:') !== false) {
+                            $comment = explode(';',$this->request->data['Attendee']['comment']);
+                            foreach ($comment as $k => $v):
+                                if (strpos($v,'Other Allergies:') !== false) {
+                                    $this->request->data['Attendee']['other_allergies'] = trim(str_replace('Other Allergies:','',$v));
+                                    unset($comment[$k]);
+                                    break;
+                                } //elseif (strpos($v,'Nurse') !== false) {
+                                    //unset($comment[$k]);
+                                //}
+                            endforeach;
+                            $this->request->data['Attendee']['comment'] = trim(implode(';',$comment));
+                        }
                         
                         //Determine if nurse box needs to be checked
                         if (strpos($this->request->data['Attendee']['comment'],'Nurse') !== false) {

@@ -310,6 +310,19 @@ class Conference extends AppModel {
 			'exclusive' => '',
 			'finderQuery' => '',
 			'counterQuery' => ''
+		),
+                'RegistrationTeamsLocalities' => array(
+			'className' => 'RegistrationTeamsLocality',
+			'foreignKey' => 'conference_id',
+			'dependent' => false,
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
 		)
 	);
 

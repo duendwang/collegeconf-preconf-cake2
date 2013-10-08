@@ -3,7 +3,7 @@
         <h4 style="font-size: 130%"><?php echo __('Your Localities');?></h4>
         <h4 style="font-size: 100%; color:#fff"><?php
         foreach ($localities as $locality):
-            echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$this->Html->link($locality['Locality']['city'],array('action' => 'summary',$locality['Locality']['id'])) . '<br>';
+            echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$this->Html->link($locality['Locality']['name'],array('action' => 'summary',$locality['Locality']['id'])) . '<br>';
         endforeach;?></h4>
         <br><?php echo $this->Html->link('View Registration Summary',array('controller' => 'attendees','action' => 'summary'));?><br><br>
         <?php //print_r($localities); ?>
@@ -11,7 +11,7 @@
 	<tr>
 			<th><?php echo $this->Paginator->sort('receive_date'); ?></th>
 			<th><?php echo $this->Paginator->sort('locality_id'); ?></th>
-			<th><?php echo $this->Paginator->sort('description'); ?></th>
+			<th><?php echo $this->Paginator->sort('FinanceType.name'); ?></th>
 			<th><?php echo $this->Paginator->sort('count'); ?></th>
 			<th><?php echo $this->Paginator->sort('rate'); ?></th>
 			<th><?php echo $this->Paginator->sort('charge'); ?></th>
@@ -25,9 +25,9 @@
 	<tr>
 		<td><?php echo h($finance['Finance']['receive_date']); ?>&nbsp;</td>
 		<td>
-			<?php echo h($finance['Locality']['city']); ?>
+			<?php echo h($finance['Locality']['name']); ?>
 		</td>
-		<td><?php echo h($finance['Finance']['description']); ?>&nbsp;</td>
+		<td><?php echo h($finance['FinanceType']['name']); ?>&nbsp;</td>
 		<td><?php echo h($finance['Finance']['count']); ?>&nbsp;</td>
 		<td><?php echo h($finance['Finance']['rate']); ?>&nbsp;</td>
 		<td><?php echo h($finance['Finance']['charge']); ?>&nbsp;</td>
@@ -40,7 +40,8 @@
 			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $finance['Finance']['id']), null, __('Are you sure you want to delete # %s?', $finance['Finance']['id'])); ?>
 		</td>**/?>
 	</tr>
-<?php endforeach; ?>
+<?php endforeach; 
+if (isset($totals)) { ?>
 	<tr></tr>
         <tr>
             <td colspan="3" style="background-color:white">
@@ -52,7 +53,8 @@
             <td>
                 <?php echo $this->Html->link($total['Conference']['code'], array('controller' => 'conferences', 'action' => 'view', $total['Conference']['id'])); ?>
             </td>
-            <td colspan="2"></td>
+            <td><?php if (isset($total['Locality'])) echo h($total['Locality']['name']);?></td>
+            <td></td>
             <td><?php echo h($total[0]['total_count']);?>&nbsp;</td>
             <td></td>
             <td><?php echo h($total[0]['total_charge']);?>&nbsp;</td>
@@ -64,6 +66,7 @@
             </td>
         </tr>
 <?php endforeach;
+        }
         }?>
         </table>
 	<?php /**<p>

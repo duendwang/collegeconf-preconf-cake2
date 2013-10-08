@@ -11,12 +11,12 @@
             <th><?php echo $this->Paginator->sort('rate'); ?></th>
             <th><?php echo $this->Paginator->sort('check_in'); ?></th>
             <th><?php echo $this->Paginator->sort('paid_at_conf'); ?></th>
-            <th><?php echo $this->Paginator->sort('cancel_count','Cancel'); ?></th>
-            <th><?php echo $this->Paginator->sort('cancel_reason'); ?></th>
+            <th><?php echo $this->Paginator->sort('Cancel.created','Cancel'); ?></th>
+            <th><?php echo $this->Paginator->sort('Cancel.cancel_reason','Cancel Reason'); ?></th>
 	</tr>
 	<?php
         foreach ($attendees as $attendee):
-            if ($attendee['Attendee']['cancel_count'] ==1) echo '<tr style="text-decoration:line-through">';
+            if ($attendee['Attendee']['cancel_count'] == 1) echo '<tr style="text-decoration:line-through">';
             else echo '<tr>';?>
 		<td><?php echo h($attendee['Attendee']['first_name']); ?>&nbsp;</td>
 		<td><?php echo h($attendee['Attendee']['last_name']); ?>&nbsp;</td>
@@ -25,8 +25,8 @@
 		<td><?php echo h($attendee['Attendee']['created']); ?>&nbsp;</td>
 		<td><?php echo h($attendee['Attendee']['rate']); ?>&nbsp;</td>
                 <td>
-                    <?php if (isset($attendee['CheckIn'][0])) echo h($attendee['CheckIn'][0]['timestamp']);
-                    else echo '';?> &nbsp;
+                    <?php //if (isset($attendee['CheckIn'][0])) echo h($attendee['CheckIn'][0]['timestamp']);
+                    //else echo '';?> &nbsp;
                 </td>
 		<td><?php echo h($attendee['Attendee']['paid_at_conf']); ?>&nbsp;</td>
 		<td><?php echo h($attendee['Cancel']['created']);?>&nbsp;</td>

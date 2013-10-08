@@ -145,8 +145,8 @@ class User extends AppModel {
  * @var array
  */
 	public $hasOne = array(
-		'RegistrationTeamMember' => array(
-			'className' => 'RegistrationTeamMember',
+		'RegistrationTeamsMember' => array(
+			'className' => 'RegistrationTeamsMember',
 			'foreignKey' => 'user_id',
 			'conditions' => '',
 			'fields' => '',

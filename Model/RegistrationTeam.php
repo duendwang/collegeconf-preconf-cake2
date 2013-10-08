@@ -40,8 +40,21 @@ class RegistrationTeam extends AppModel {
  * @var array
  */
 	public $hasMany = array(
-		'RegistrationTeamMember' => array(
-			'className' => 'RegistrationTeamMember',
+		'RegistrationTeamsMember' => array(
+			'className' => 'RegistrationTeamsMember',
+			'foreignKey' => 'registration_team_id',
+			'dependent' => false,
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
+		),
+                'RegistrationTeamsLocalities' => array(
+			'className' => 'RegistrationTeamsLocalities',
 			'foreignKey' => 'registration_team_id',
 			'dependent' => false,
 			'conditions' => '',
