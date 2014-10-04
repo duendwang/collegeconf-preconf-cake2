@@ -111,6 +111,19 @@ class Locality extends AppModel {
 			'finderQuery' => '',
 			'counterQuery' => ''
 		),
+                'PotentialAttendee' => array(
+			'className' => 'PotentialAttendee',
+			'foreignKey' => 'locality_id',
+			'dependent' => false,
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
+		),
 		'RegistrationStep' => array(
 			'className' => 'RegistrationStep',
 			'foreignKey' => 'locality_id',

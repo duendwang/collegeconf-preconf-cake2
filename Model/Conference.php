@@ -298,6 +298,19 @@ class Conference extends AppModel {
 			'finderQuery' => '',
 			'counterQuery' => ''
 		),
+                'PotentialAttendee' => array(
+			'className' => 'PotentialAttendee',
+			'foreignKey' => 'conference_id',
+			'dependent' => false,
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
+		),
 		'RegistrationStep' => array(
 			'className' => 'RegistrationStep',
 			'foreignKey' => 'conference_id',
