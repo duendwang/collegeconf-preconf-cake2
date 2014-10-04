@@ -1,5 +1,0 @@
-<?php
-
-
-?>
-Temporary home page
