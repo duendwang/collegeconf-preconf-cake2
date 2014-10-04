@@ -64,6 +64,19 @@ class Status extends AppModel {
 			'finderQuery' => '',
 			'counterQuery' => ''
 		),
+                'PotentialAttendee' => array(
+			'className' => 'PotentialAttendee',
+			'foreignKey' => 'status_id',
+			'dependent' => false,
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
+		),
 		'User' => array(
 			'className' => 'User',
 			'foreignKey' => 'status_id',

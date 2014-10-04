@@ -66,6 +66,19 @@ class Campus extends AppModel {
 			'finderQuery' => '',
 			'counterQuery' => ''
 		),
+                'PotentialAttendee' => array(
+			'className' => 'PotentialAttendee',
+			'foreignKey' => 'campus_id',
+			'dependent' => false,
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
+		),
 		'User' => array(
 			'className' => 'User',
 			'foreignKey' => 'campus_id',

@@ -21,8 +21,8 @@ App::uses('AppModel', 'Model');
 class Attendee extends AppModel {
 
 /**
- * contain
- *
+ * Contain
+ * 
  * @var array
  */
         public $contain = array(
