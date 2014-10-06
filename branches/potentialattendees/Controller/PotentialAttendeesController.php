@@ -82,24 +82,28 @@ class PotentialAttendeesController extends AppController {
  * @throws NotFoundException
  * @return void
  */
-        public function process($locality = null) {
-            if ($this->request->is('post')) {
-                
-            }
-            
-            //TODO Check for 1) attendees to import, 2) attendees to ignore, 3) attendees that were just changed.
-            
-            
+        public function process($locality) {
             if ($this->Auth->user('UserType.account_type_id') == 4) {
                 $locality = $this->Auth->user('locality_id');
             }
             
-            if (isset($locality) && !$this->PotentialAttendee->Locality->exists($locality)) {
+            if (!isset($locality)) {
+                $this->Session->setFlash(__('Invalid request. If this persists, plesae notify the system adminstrator.'),'failure');
+                $this->redirect(array('controller' => 'pages', 'action' => 'display','home'));
+            } elseif (!$this->PotentialAttendee->Locality->exists($locality)) {
                 throw new NotFoundException(__('Invalid locality code'));
                 //$this->redirect(array('controller' => 'pages', 'action' => 'display','home'));
             }
             
             //TODO need to add checking for assigned locality for reg team or for core status
+            
+            if ($this->request->is('post')) {
+                
+            }
+            
+            //TODO Check for 1) attendees to import, 2) attendees to ignore, 3) attendees that were just changed.
+            //Check if an attendee's information has been edited:
+            //$result = array_diff_assoc($this->old[$this->alias],$this->data[$this->alias]);
             
             $potential_attendees = $this->PotentialAttendee->find('all',array(
                 'conditions' => array(
