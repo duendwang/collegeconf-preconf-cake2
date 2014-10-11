@@ -1,12 +1,5 @@
 <?php
 /**
- * Abstract Toolbar helper.
- *
- * Provides Base methods for content specific debug toolbar helpers.
- * Acts as a facade for other toolbars helpers as well.
- *
- * PHP 5
- *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
@@ -15,19 +8,18 @@
  *
  * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  * @link          http://cakephp.org CakePHP(tm) Project
- * @package       DebugKit.View.Helper
  * @since         DebugKit 0.1
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
- **/
+ */
 
 App::uses('DebugKitDebugger', 'DebugKit.Lib');
 App::uses('AppHelper', 'View/Helper');
 App::uses('ConnectionManager', 'Model');
 
 /**
- * Class ToolbarHelper
+ * Provides Base methods for content specific debug toolbar helpers.
+ * Acts as a facade for other toolbars helpers as well.
  *
- * @package       DebugKit.View.Helper
  * @since         DebugKit 0.1
  */
 class ToolbarHelper extends AppHelper {
@@ -140,7 +132,7 @@ class ToolbarHelper extends AppHelper {
  * Read the toolbar
  *
  * @param string $name Name of the panel you want cached data for
- * @param int $index
+ * @param integer $index
  * @return mixed Boolean false on failure, array of data otherwise.
  */
 	public function readCache($name, $index = 0) {
@@ -190,7 +182,7 @@ class ToolbarHelper extends AppHelper {
 				$query['numRows'] / $query['took'] <= $options['threshold']
 			);
 			$query['actions'] = '';
-			$isHtml = ($this->getName() == 'HtmlToolbar');
+			$isHtml = ($this->getName() === 'HtmlToolbar');
 			if ($isSlow && $isHtml) {
 				$query['actions'] = sprintf(
 					'<span class="slow-query">%s</span>',
@@ -211,7 +203,7 @@ class ToolbarHelper extends AppHelper {
 					}
 					foreach ($query['params'] as $bindKey => $bindVal) {
 						if ($bindType === true) {
-							$bindParam .= h($bindKey) ." => " . h($bindVal) . ", ";
+							$bindParam .= h($bindKey) . " => " . h($bindVal) . ", ";
 						} else {
 							$bindParam .= h($bindVal) . ", ";
 						}
@@ -229,4 +221,5 @@ class ToolbarHelper extends AppHelper {
 		}
 		return $out;
 	}
+
 }
