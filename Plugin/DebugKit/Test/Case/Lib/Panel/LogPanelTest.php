@@ -12,7 +12,6 @@
  *
  * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  * @link          http://cakephp.org CakePHP(tm) Project
- * @package       DebugKit.Test.Case.Lib.Panel
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  **/
 
@@ -22,7 +21,6 @@ App::uses('Controller', 'Controller');
 /**
  * Class LogPanelTest
  *
- * @package       DebugKit.Test.Case.Lib.Panel
  */
 class LogPanelTest extends CakeTestCase {
 
@@ -58,7 +56,7 @@ class LogPanelTest extends CakeTestCase {
 		CakeLog::write('error', 'Test');
 
 		$result = $this->panel->beforeRender($controller);
-		$this->assertInstanceOf('DebugKitLogListener', $result);
+		$this->assertInstanceOf('DebugKitLog', $result);
 		$this->assertTrue(isset($result->logs));
 		$this->assertCount(1, $result->logs['error']);
 	}

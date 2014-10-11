@@ -12,7 +12,6 @@
  *
  * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  * @link          http://cakephp.org CakePHP(tm) Project
- * @package       DebugKit.Test.Case.Lib
  * @since         debug_kit 2.0
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
@@ -22,7 +21,6 @@ App::uses('DebugTimer', 'DebugKit.Lib');
 /**
  * Class DebugTimerTest
  *
- * @package       DebugKit.Test.Case.Lib
  * @since         debug_kit 2.0
  */
 class DebugTimerTest extends CakeTestCase {
@@ -52,7 +50,7 @@ class DebugTimerTest extends CakeTestCase {
 		sleep(1);
 		$this->assertTrue(DebugTimer::stop('test2'));
 		$elapsed = DebugTimer::elapsedTime('test2');
-		$expected = strpos(PHP_OS, 'WIN') === false ? 0.999: 0.95; // Windows timer's precision is bad
+		$expected = stripos(PHP_OS, 'win') === false ? 0.999: 0.95; // Windows timer's precision is bad
 		$this->assertTrue($elapsed >= $expected);
 
 		DebugTimer::start('test3');

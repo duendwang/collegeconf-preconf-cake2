@@ -1,11 +1,5 @@
 <?php
 /**
- * DebugKit ToolbarAccess Controller
- *
- * Allows retrieval of information from the debugKit internals.
- *
- * PHP 5
- *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
@@ -14,18 +8,18 @@
  *
  * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  * @link          http://cakephp.org CakePHP(tm) Project
- * @package       DebugKit.Controller
  * @since         DebugKit 1.1
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
- **/
+ */
 
 App::uses('Security', 'Utility');
 App::uses('DebugKitAppController', 'DebugKit.Controller');
 
 /**
- * Class ToolbarAccessController
+ * DebugKit ToolbarAccess Controller
  *
- * @package       DebugKit.Controller
+ * Allows retrieval of information from the debugKit internals.
+ *
  * @since         DebugKit 1.1
  */
 class ToolbarAccessController extends DebugKitAppController {
@@ -94,6 +88,8 @@ class ToolbarAccessController extends DebugKitAppController {
 		$oldState = $this->Toolbar->loadState($key);
 		$this->set('toolbarState', $oldState);
 		$this->set('debugKitInHistoryMode', true);
+		$this->viewClass = null;
+		$this->layout = null;
 	}
 
 /**
@@ -114,11 +110,12 @@ class ToolbarAccessController extends DebugKitAppController {
 		) {
 			throw new BadRequestException('Invalid parameters');
 		}
-		$hash = Security::hash($this->request->data['log']['sql'] . $this->request->data['log']['ds'], null, true);
+		$hash = Security::hash($this->request->data['log']['sql'] . $this->request->data['log']['ds'], 'sha1', true);
 		if ($hash !== $this->request->data['log']['hash']) {
 			throw new BadRequestException('Invalid parameters');
 		}
 		$result = $this->ToolbarAccess->explainQuery($this->request->data['log']['ds'], $this->request->data['log']['sql']);
 		$this->set(compact('result'));
 	}
+
 }

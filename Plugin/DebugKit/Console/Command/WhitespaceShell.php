@@ -1,11 +1,5 @@
 <?php
 /**
- * Whitespace shell. Helps find and trim whitespace from files.
- *
- * Based on jperras' shell found at http://bin.cakephp.org/view/626544881
- *
- * PHP 5
- *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
@@ -14,16 +8,16 @@
  *
  * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  * @link          http://cakephp.org CakePHP(tm) Project
- * @package       DebugKit.Console.Command
  * @since         DebugKit 1.3
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 App::uses('Folder', 'Utility');
 
 /**
- * Class WhitespaceShell
+ * Whitespace shell. Helps find and trim whitespace from files.
  *
- * @package       DebugKit.Console.Command
+ * Based on jperras' shell found at http://bin.cakephp.org/view/626544881
+ *
  * @since         DebugKit 1.3
  */
 class WhitespaceShell extends Shell {
@@ -91,6 +85,9 @@ class WhitespaceShell extends Shell {
  */
 	public function getOptionParser() {
 		$parser = parent::getOptionParser();
-		return $parser->addOption('path', array('short' => 'p', 'help' => __d('cake_console', 'Absolute path or relative to APP.')));
+		return $parser->addOption('path', array(
+			'short' => 'p',
+			'help' => __d('cake_console', 'Absolute path or relative to APP.')
+		));
 	}
 }
