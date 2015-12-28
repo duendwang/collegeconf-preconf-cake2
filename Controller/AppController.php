@@ -74,9 +74,20 @@ class AppController extends Controller {
         'Acl',
         'Session',
         'Auth' => array(
-            'loginRedirect' => array('controller' => 'pages', 'action' => 'display', 'home'),
-            'logoutRedirect' => array('controller' => 'users', 'action' => 'login'),
-            //'authorize' => array('Actions' => array('actionPath' => 'controllers'))
+            'loginRedirect' => array(
+                'controller' => 'pages',
+                'action' => 'display',
+                'home'
+            ),
+            'logoutRedirect' => array(
+                'controller' => 'users',
+                'action' => 'login'
+            ),
+            'authenticate' => array(
+                'Form' => array(
+                    'passwordHasher' => 'Blowfish',
+                )
+            ),
         ),
     );
 	
